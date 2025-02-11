@@ -7,7 +7,7 @@ class btc
 {
     private:
         std::string _input;
-        std::map<std::string, int>  _inputMap;
+        std::map<std::string, float>  _inputMap;
     public:
         btc(std::string input);
         void    readFile();
