@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <regex>
+#include <ctime>
 
 class btc
 {
@@ -11,4 +13,5 @@ class btc
     public:
         btc(std::string input);
         void    readFile();
+        bool    isValidDate(const std::string& date);
 };
