@@ -73,7 +73,7 @@ void    btc::readFile()
             value = std::stof(line.substr(pos + 2));
             if (value < 0 || value > 1000)
             {
-                std::cerr << "Error: Invalid value" << std::endl;
+                std::cerr << "Error: Invalid value -> " << value << std::endl;
                 continue ;
             }
         }
@@ -84,7 +84,7 @@ void    btc::readFile()
         }
          _inputMap.insert({date, value});
     }
-
+    std::cout << std::endl << "multimap contents: " << std::endl;
     for (std::multimap<std::string, float>::iterator it = _inputMap.begin(); it != _inputMap.end(); ++it)
         std::cout << it->first << " -> " << it->second << std::endl;
 
