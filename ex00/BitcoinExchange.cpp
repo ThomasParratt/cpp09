@@ -20,9 +20,7 @@ void    btc::readFile()
 
     while (std::getline(input, line))
     {
-        std::cout << line << std::endl;
         size_t  pos = line.find('|');
-        size_t  pos1 = line.find('\n');
         if (pos != std::string::npos)
         {
             date = line.substr(0, pos - 1);
@@ -34,12 +32,17 @@ void    btc::readFile()
         }
         try
         {
-            value = std::stof(line.substr(pos + 2, pos1));
+            value = std::stof(line.substr(pos + 2));
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << std::endl; //exception for first line of file
+            std::cerr << e.what() << std::endl;
+            continue ;
         }
-        _inputMap[date] = value;
+         _inputMap.insert({date, value});
     }
+
+    for (std::multimap<std::string, float>::iterator it = _inputMap.begin(); it != _inputMap.end(); ++it)
+        std::cout << it->first << " -> " << it->second << std::endl;
+
 }
