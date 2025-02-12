@@ -33,6 +33,11 @@ void    btc::readFile()
         try
         {
             value = std::stof(line.substr(pos + 2));
+            if (value < 0 || value > 1000)
+            {
+                std::cout << "Error: Invalid value" << std::endl;
+                continue ;
+            }
         }
         catch(const std::exception& e)
         {
