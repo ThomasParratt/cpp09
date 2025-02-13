@@ -5,42 +5,6 @@ btc::btc(std::string input, std::string data) : _input(input), _data(data)
 
 }
 
-bool btc::isValidDate(const std::string& date)
-{
-    std::regex datePattern(R"(^\d{4}-\d{2}-\d{2}$)");
-    if (!std::regex_match(date, datePattern))
-    {
-        std::cerr << "Error: Invalid date format -> " << date << std::endl;
-        return false;
-    }
-
-    int year, month, day;
-    if (sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day) != 3)
-    {
-        std::cerr << "Error: Failed to parse date -> " << date << std::endl;
-        return false;
-    }
-
-    if (month < 1 || month > 12)
-    {
-        std::cerr << "Error: Invalid month in date -> " << date << std::endl;
-        return false;
-    }
-
-    std::tm timeStruct = {};
-    timeStruct.tm_year = year - 1900; // Years since 1900
-    timeStruct.tm_mon = month - 1;    // Zero-based month (0 = Jan, 11 = Dec)
-    timeStruct.tm_mday = day;
-
-    if (std::mktime(&timeStruct) == -1 || timeStruct.tm_mday != day)
-    {
-        std::cerr << "Error: Invalid day in date -> " << date << std::endl;
-        return false;
-    }
-
-    return true;
-}
-
 void    btc::readInput()
 {
     std::ifstream   input(_input);
@@ -119,4 +83,40 @@ void    btc::readData()
     for (std::multimap<std::string, float>::iterator it = _dataMap.begin(); it != _dataMap.end(); ++it)
         std::cout << it->first << " -> " << it->second << std::endl;
 
+}
+
+bool btc::isValidDate(const std::string& date)
+{
+    std::regex datePattern(R"(^\d{4}-\d{2}-\d{2}$)");
+    if (!std::regex_match(date, datePattern))
+    {
+        std::cerr << "Error: Invalid date format -> " << date << std::endl;
+        return false;
+    }
+
+    int year, month, day;
+    if (sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day) != 3)
+    {
+        std::cerr << "Error: Failed to parse date -> " << date << std::endl;
+        return false;
+    }
+
+    if (month < 1 || month > 12)
+    {
+        std::cerr << "Error: Invalid month in date -> " << date << std::endl;
+        return false;
+    }
+
+    std::tm timeStruct = {};
+    timeStruct.tm_year = year - 1900; // Years since 1900
+    timeStruct.tm_mon = month - 1;    // Zero-based month (0 = Jan, 11 = Dec)
+    timeStruct.tm_mday = day;
+
+    if (std::mktime(&timeStruct) == -1 || timeStruct.tm_mday != day)
+    {
+        std::cerr << "Error: Invalid day in date -> " << date << std::endl;
+        return false;
+    }
+
+    return true;
 }
