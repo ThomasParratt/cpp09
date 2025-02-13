@@ -9,5 +9,5 @@ int main(int argc, char **argv)
     }
     btc bitcoin = btc(argv[1], "data.csv");
     bitcoin.readData();
-    bitcoin.readInput();
+    bitcoin.printResults();
 }
