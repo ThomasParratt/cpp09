@@ -36,7 +36,7 @@ void    btc::readData()
 
 }
 
-void    btc::readInput() //NEED BETTER ERROR HANDLING
+void    btc::readInput()
 {
     std::ifstream   input(_input);
     std::string     date;
@@ -51,24 +51,26 @@ void    btc::readInput() //NEED BETTER ERROR HANDLING
 
     while (std::getline(input, line))
     {
-        size_t  pos = line.find('|');
-        if (pos != std::string::npos)
+        std::regex syntax(R"(^[^]+ \| [^]+$)");
+        if (!std::regex_match(line, syntax))
         {
-            date = line.substr(0, pos - 1);
-            if (!this->isValidDate(date))
-                continue ;
-        }
-        else
-        {
-            std::cerr << "Error: Line contains no |" << std::endl;
+            std::cerr << "Error: Wrong line format" << std::endl;
             continue ;
         }
+
+        size_t  pos = line.find('|');
+        date = line.substr(0, pos - 1);
+        if (date == "date")
+            continue ;
+        if (!this->isValidDate(date))
+            continue ;
+
         try
         {
             value = std::stof(line.substr(pos + 2));
             if (value < 0 || value > 1000)
             {
-                std::cerr << "Error: Invalid value -> " << value << std::endl;
+                std::cerr << "Error: Invalid value => " << value << std::endl;
                 continue ;
             }
         }
@@ -77,13 +79,8 @@ void    btc::readInput() //NEED BETTER ERROR HANDLING
             std::cerr << e.what() << std::endl;
             continue ;
         }
-        // _inputMap.insert({date, value});
         std::cout << date << " => " << value << std::endl;
     }
-    // std::cout << std::endl << "input multimap contents: " << std::endl;
-    // for (std::multimap<std::string, float>::iterator it = _inputMap.begin(); it != _inputMap.end(); ++it)
-    //     std::cout << it->first << " -> " << it->second << std::endl;
-
 }
 
 bool btc::isValidDate(const std::string& date)
@@ -91,20 +88,20 @@ bool btc::isValidDate(const std::string& date)
     std::regex datePattern(R"(^\d{4}-\d{2}-\d{2}$)");
     if (!std::regex_match(date, datePattern))
     {
-        std::cerr << "Error: Invalid date format -> " << date << std::endl;
+        std::cerr << "Error: Invalid date format => " << date << std::endl;
         return false;
     }
 
     int year, month, day;
     if (sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day) != 3)
     {
-        std::cerr << "Error: Failed to parse date -> " << date << std::endl;
+        std::cerr << "Error: Failed to parse date => " << date << std::endl;
         return false;
     }
 
     if (month < 1 || month > 12)
     {
-        std::cerr << "Error: Invalid month in date -> " << date << std::endl;
+        std::cerr << "Error: Invalid month in date => " << date << std::endl;
         return false;
     }
 
@@ -115,7 +112,7 @@ bool btc::isValidDate(const std::string& date)
 
     if (std::mktime(&timeStruct) == -1 || timeStruct.tm_mday != day)
     {
-        std::cerr << "Error: Invalid day in date -> " << date << std::endl;
+        std::cerr << "Error: Invalid day in date => " << date << std::endl;
         return false;
     }
 
