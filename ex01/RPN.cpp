@@ -20,7 +20,7 @@ void RPN::parseInput()
         {
             if (values.size() < 2)
             {
-                std::cerr << "Error: Not enough operands for operator " << c << std::endl;
+                std::cerr << "Error: Not enough operands" << std::endl;
                 return ;
             }
 
@@ -39,12 +39,12 @@ void RPN::parseInput()
                     result = a - b; 
                     break ;
                 case '*': 
-                    result = a * b; 
+                    result = a * b;
                     break ;
                 case '/': 
                     if (b == 0)
                     {
-                        std::cerr << "Error: Division by zero!" << std::endl;
+                        std::cerr << "Error: Division by zero" << std::endl;
                         return ;
                     }
                     result = a / b;
@@ -54,7 +54,7 @@ void RPN::parseInput()
         }
         else if (c != ' ')
         {
-            std::cerr << "Error: Invalid character in input: " << c << std::endl;
+            std::cerr << "Error: Invalid input" << std::endl;
             return ;
         }
     }
@@ -62,5 +62,5 @@ void RPN::parseInput()
     if (values.size() == 1)
         std::cout << values.top() << std::endl;
     else
-        std::cerr << "Error: Invalid RPN expression." << std::endl;
+        std::cerr << "Error: Invalid RPN expression" << std::endl;
 }

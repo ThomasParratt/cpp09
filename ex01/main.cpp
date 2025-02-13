@@ -8,6 +8,5 @@ int main(int argc, char **argv)
         exit(1);
     }
     RPN rpn = RPN(argv[1]);
-    // need validation here
     rpn.parseInput();
 }
