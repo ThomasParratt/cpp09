@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 
 class RPN
 {
@@ -6,4 +7,5 @@ class RPN
         std::string _input;
     public:
         RPN(std::string input);
+        void    parseInput();
 };
