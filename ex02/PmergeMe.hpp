@@ -7,5 +7,5 @@ class PmergeMe
     private:
         std::vector<unsigned int>   _seq;
     public:
-        PmergeMe(std::vector<unsigned int> sequence);
+        PmergeMe(int argc, char **argv);
 };
