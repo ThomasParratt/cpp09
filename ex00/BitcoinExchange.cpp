@@ -93,12 +93,7 @@ bool btc::isValidDate(std::string date)
     }
 
     int year, month, day;
-    if (sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day) != 3)
-    {
-        std::cout << "Error: Failed to parse date => " << date << std::endl;
-        return false;
-    }
-
+    sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day);
     if (month < 1 || month > 12)
     {
         std::cout << "Error: Invalid month in date => " << date << std::endl;
