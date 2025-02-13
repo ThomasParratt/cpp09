@@ -1,6 +1,6 @@
 #include "BitcoinExchange.hpp"
 
-btc::btc(std::string input) : _input(input)
+btc::btc(std::string input, std::string data) : _input(input), _data(data)
 {
 
 }
@@ -41,7 +41,7 @@ bool btc::isValidDate(const std::string& date)
     return true;
 }
 
-void    btc::readFile()
+void    btc::readInput()
 {
     std::ifstream   input(_input);
     std::string     date;
@@ -84,8 +84,39 @@ void    btc::readFile()
         }
          _inputMap.insert({date, value});
     }
-    std::cout << std::endl << "multimap contents: " << std::endl;
+    std::cout << std::endl << "input multimap contents: " << std::endl;
     for (std::multimap<std::string, float>::iterator it = _inputMap.begin(); it != _inputMap.end(); ++it)
+        std::cout << it->first << " -> " << it->second << std::endl;
+
+}
+
+void    btc::readData()
+{
+    std::ifstream   input(_data);
+    std::string     date;
+    float           value;
+    std::string     line;
+
+    if (!input)
+    {
+        std::cerr << "Error opening file" << std::endl;
+        exit(1);
+    }
+
+    while (std::getline(input, line))
+    {
+        size_t  pos = line.find(',');
+        date = line.substr(0, pos);
+        if (date == "date")
+            continue ;
+        if (line.substr(pos + 1) == "0")
+            value = 0;
+        else
+            value = std::stof(line.substr(pos + 1));
+         _dataMap.insert({date, value});
+    }
+    std::cout << std::endl << "data multimap contents: " << std::endl;
+    for (std::multimap<std::string, float>::iterator it = _dataMap.begin(); it != _dataMap.end(); ++it)
         std::cout << it->first << " -> " << it->second << std::endl;
 
 }

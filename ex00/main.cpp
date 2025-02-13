@@ -7,6 +7,7 @@ int main(int argc, char **argv)
         std::cout << "Usage: ./btc <input file>" << std::endl;
         exit(1);
     }
-    btc bitcoin = btc(argv[1]);
-    bitcoin.readFile();
+    btc bitcoin = btc(argv[1], "data.csv");
+    bitcoin.readInput();
+    bitcoin.readData();
 }
