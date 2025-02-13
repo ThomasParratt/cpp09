@@ -79,9 +79,9 @@ void    btc::readData()
             value = std::stof(line.substr(pos + 1));
          _dataMap.insert({date, value});
     }
-    std::cout << std::endl << "data multimap contents: " << std::endl;
-    for (std::map<std::string, float>::iterator it = _dataMap.begin(); it != _dataMap.end(); ++it)
-        std::cout << it->first << " -> " << it->second << std::endl;
+    // std::cout << std::endl << "data multimap contents: " << std::endl;
+    // for (std::map<std::string, float>::iterator it = _dataMap.begin(); it != _dataMap.end(); ++it)
+    //     std::cout << it->first << " -> " << it->second << std::endl;
 
 }
 
