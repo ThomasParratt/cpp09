@@ -54,7 +54,7 @@ void    btc::readInput()
         std::regex syntax(R"(^[^]+ \| [^]+$)");
         if (!std::regex_match(line, syntax))
         {
-            std::cerr << "Error: Wrong line format" << std::endl;
+            std::cout << "Error: Wrong line format" << std::endl;
             continue ;
         }
 
@@ -62,7 +62,7 @@ void    btc::readInput()
         date = line.substr(0, pos - 1);
         if (date == "date")
             continue ;
-        if (!this->isValidDate(date))
+        if (!isValidDate(date))
             continue ;
 
         try
@@ -70,38 +70,38 @@ void    btc::readInput()
             value = std::stof(line.substr(pos + 2));
             if (value < 0 || value > 1000)
             {
-                std::cerr << "Error: Invalid value => " << value << std::endl;
+                std::cout << "Error: Invalid value => " << value << std::endl;
                 continue ;
             }
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << std::endl;
+            std::cout << "Error: Invalid value => " << line.substr(pos + 2) << std::endl;
             continue ;
         }
-        std::cout << date << " => " << value << std::endl;
+        std::cout << date << " => " << value << " = " << getResult(date, value) << std::endl;
     }
 }
 
-bool btc::isValidDate(const std::string& date)
+bool btc::isValidDate(std::string date)
 {
     std::regex datePattern(R"(^\d{4}-\d{2}-\d{2}$)");
     if (!std::regex_match(date, datePattern))
     {
-        std::cerr << "Error: Invalid date format => " << date << std::endl;
+        std::cout << "Error: Invalid date format => " << date << std::endl;
         return false;
     }
 
     int year, month, day;
     if (sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day) != 3)
     {
-        std::cerr << "Error: Failed to parse date => " << date << std::endl;
+        std::cout << "Error: Failed to parse date => " << date << std::endl;
         return false;
     }
 
     if (month < 1 || month > 12)
     {
-        std::cerr << "Error: Invalid month in date => " << date << std::endl;
+        std::cout << "Error: Invalid month in date => " << date << std::endl;
         return false;
     }
 
@@ -112,9 +112,22 @@ bool btc::isValidDate(const std::string& date)
 
     if (std::mktime(&timeStruct) == -1 || timeStruct.tm_mday != day)
     {
-        std::cerr << "Error: Invalid day in date => " << date << std::endl;
+        std::cout << "Error: Invalid day in date => " << date << std::endl;
         return false;
     }
 
     return true;
+}
+
+float   btc::getResult(std::string date, float value)
+{
+    for (std::map<std::string, float>::iterator it = _dataMap.begin(); it != _dataMap.end(); ++it)
+    {
+        if (it->first > date)
+        {
+            it--;
+            return (value * it->second);
+        }
+    }
+    return (0);
 }

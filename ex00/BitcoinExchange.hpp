@@ -15,5 +15,6 @@ class btc
         btc(std::string input, std::string data);
         void    readData();
         void    readInput();
-        bool    isValidDate(const std::string& date);
+        bool    isValidDate(std::string date);
+        float   getResult(std::string date, float value);
 };
