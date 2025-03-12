@@ -9,8 +9,8 @@ PmergeMe::PmergeMe(int argc, char **argv)
         _seq.push_back(std::make_pair(std::stoul(argv[i]), std::stoul(argv[i + 1])));
     }
 
-    for (auto &p : _seq) 
+    for (auto &p : _seq)
     {
-        std::cout << "Firt: " << p.first << ", Second: " << p.second << std::endl;
+        std::cout << "First: " << p.first << ", Second: " << p.second << std::endl;
     }
 }
