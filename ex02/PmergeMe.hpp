@@ -8,6 +8,7 @@ class PmergeMe
     private:
         //std::vector<unsigned int>>   _seq;
         std::vector<std::pair<unsigned int, unsigned int>> _seq;
+        unsigned int    _odd;
     public:
         PmergeMe(int argc, char **argv);
         // 1. make vector
