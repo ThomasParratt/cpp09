@@ -1,13 +1,13 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <variant>
+//#include <variant>
 
 class PmergeMe
 {
     private:
         //std::vector<unsigned int>>   _seq;
-        std::vector<std::variant<std::pair<unsigned int, unsigned int>, unsigned int>> _seq;
+        std::vector<std::pair<unsigned int, unsigned int>> _seq;
     public:
         PmergeMe(int argc, char **argv);
         // 1. make vector
