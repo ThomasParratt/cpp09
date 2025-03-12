@@ -16,13 +16,20 @@ PmergeMe::PmergeMe(int argc, char **argv)
 
 void    PmergeMe::printPairs()
 {
-    for (auto &p : _seq)
-        std::cout << "First: " << p.first << ", Second: " << p.second << std::endl;
+    for (auto &it : _seq)
+        std::cout << "First: " << it.first << ", Second: " << it.second << std::endl;
     if (_isOdd)
         std::cout << "First: " << _odd << std::endl;
 }
 
 void    PmergeMe::sortPairs()
 {
-
+    std::cout << "Sorting pairs..." << std::endl; 
+    for (auto &it : _seq)
+    {
+        if (it.first > it.second)
+        {
+            std::swap(it.first, it.second);
+        }
+    }
 }
