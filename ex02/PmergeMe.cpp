@@ -73,7 +73,10 @@ void    PmergeMe::sortPairs()
     }
 }
 
-void    extractSmallerElements()
+void    PmergeMe::extractSmallerElements()
 {
-    
+    for (auto &it : _seq)
+    {
+        
+    }
 }
