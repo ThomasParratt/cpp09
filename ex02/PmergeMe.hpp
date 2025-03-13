@@ -16,7 +16,7 @@ class PmergeMe
         void    sortPairs();
         // 1. make vector
         // 2. make vector with pairs (is step 1. necessary?) ***
-        // 3. determine the larger of the two elements in each pair (swap if needed)
+        // 3. determine the larger of the two elements in each pair (swap if needed) ***
         // 4. (recursively) sort the pairs into order based on the size of the first larger element
 
         // 5. create "main chain" (first larger elements) and "pend" (other elements)
