@@ -37,6 +37,19 @@ void    PmergeMe::createPairs()
         std::cout << "First: " << it.first << ", Second: " << it.second << std::endl;
     if (_isOdd2)
         std::cout << "First: " << _odd2 << std::endl;
+    //Sort _seq2 pairs
+    for (auto &it : _seq2)
+    {
+        if (it.first > it.second)
+        {
+            std::swap(it.first, it.second);
+        }
+    }
+    //Print _seq2 pairs
+    for (auto &it : _seq2)
+        std::cout << "First: " << it.first << ", Second: " << it.second << std::endl;
+    if (_isOdd2)
+        std::cout << "First: " << _odd2 << std::endl;
 }
 
 void    PmergeMe::printPairs()
@@ -58,4 +71,9 @@ void    PmergeMe::sortPairs()
             std::swap(it.first, it.second);
         }
     }
+}
+
+void    extractSmallerElements()
+{
+    
 }

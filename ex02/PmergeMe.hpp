@@ -15,6 +15,7 @@ class PmergeMe
         void    createPairs();
         void    printPairs();
         void    sortPairs();
+        void    extractSmallerElements();
 };
 
 
