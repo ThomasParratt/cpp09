@@ -6,12 +6,13 @@
 class PmergeMe
 {
     private:
-        //std::vector<unsigned int>>   _seq;
+        std::vector<unsigned int>   _input;
         std::vector<std::pair<unsigned int, unsigned int>> _seq;
         unsigned int    _odd;
         bool            _isOdd = false;
     public:
         PmergeMe(int argc, char **argv);
+        void    createPairs();
         void    printPairs();
         void    sortPairs();
 };

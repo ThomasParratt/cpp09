@@ -11,4 +11,5 @@ int main(int argc, char **argv)
     sorter.printPairs();
     sorter.sortPairs();
     sorter.printPairs();
+    sorter.createPairs();
 }
