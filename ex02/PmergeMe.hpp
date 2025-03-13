@@ -14,11 +14,23 @@ class PmergeMe
         PmergeMe(int argc, char **argv);
         void    printPairs();
         void    sortPairs();
-        // 1. make vector
-        // 2. make vector with pairs (is step 1. necessary?) ***
-        // 3. determine the larger of the two elements in each pair (swap if needed) ***
-        // 4. (recursively) sort the pairs into order based on the size of the first larger element
-
-        // 5. create "main chain" (first larger elements) and "pend" (other elements)
-        // 6. insert the "pend" elements into "main chain"
+        
 };
+
+
+// 1. Pairing Elements
+
+// Group the numbers into pairs.
+// Compare each pair and sort them (smaller number first, larger second).
+
+// 2. Creating a Partially Sorted List
+
+// Take the smallest element from each sorted pair and sort them recursively using the same method. This step creates an "insertion order" list.
+
+// 3. Merging and Inserting the Larger Elements
+
+// The larger numbers from the original pairs are inserted into the sorted sequence one by one, using a carefully chosen insertion order to minimize comparisons.
+
+// 4. Final Sorting Pass
+
+// Continue merging and inserting until the whole sequence is sorted.
