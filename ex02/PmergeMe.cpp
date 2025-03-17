@@ -2,19 +2,34 @@
 
 PmergeMe::PmergeMe(int argc, char **argv)
 {
-    for (int i = 1; i < argc; i+=2)
+    for (int i = 1; i < argc; i++)
     {
-        if (i + 1 < argc)
-            _seq.push_back(std::make_pair(std::stoul(argv[i]), std::stoul(argv[i + 1])));
-        else
-        {
-            _isOdd = true;
-            _odd = std::stoul(argv[i]);
-        }
+        _vec.push_back(std::stoul(argv[i]));
     }
 }
 
-void    PmergeMe::createPairs()
+void    PmergeMe::printVec()
+{
+    for (auto &it : _vec)
+    {
+        std::cout << it << " ";
+    }
+    std::cout << std::endl;
+}
+
+void    PmergeMe::sort()
+{
+    size_t pairSize = 2;
+
+    for (size_t i = 0; i < _vec.size(); i += pairSize)
+    {
+        std::cout << "_vec[i] = " << _vec[i] << "  " << "_vec[i + 1] = " << _vec[i + 1] << std::endl;
+        if (_vec[i] > _vec[i + 1])
+            std::swap(_vec[i], _vec[i + 1]);
+    }
+}
+
+/*void    PmergeMe::createPairs()
 {
     std::cout << "Creating pairs.." << std::endl;
     std::vector<std::pair<unsigned int, unsigned int>> _seq2;
@@ -79,4 +94,4 @@ void    PmergeMe::extractSmallerElements()
     {
         
     }
-}
+}*/
