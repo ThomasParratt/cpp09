@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     }
     PmergeMe sorter = PmergeMe(argc, argv);
     sorter.printVec();
-    sorter.sort();
+    sorter.sort(1, 2);
     sorter.printVec();
     //sorter.printPairs();
     //sorter.sortPairs();

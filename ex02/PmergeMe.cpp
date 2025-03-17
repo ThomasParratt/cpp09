@@ -17,15 +17,20 @@ void    PmergeMe::printVec()
     std::cout << std::endl;
 }
 
-void    PmergeMe::sort()
+void    PmergeMe::sort(size_t it, size_t pairSize)
 {
-    size_t pairSize = 2;
-
-    for (size_t i = 0; i < _vec.size(); i += pairSize)
+    std::cout << "it = " << it << std::endl;
+    std::cout << "pairSize = " << pairSize << std::endl;
+    printVec();
+    for (size_t i = it - 1; i + pairSize/2 < _vec.size(); i += pairSize)
     {
-        std::cout << "_vec[i] = " << _vec[i] << "  " << "_vec[i + 1] = " << _vec[i + 1] << std::endl;
-        if (_vec[i] > _vec[i + 1])
-            std::swap(_vec[i], _vec[i + 1]);
+        std::cout << "_vec[i] = " << _vec[i] << "  " << "_vec[i + pairSize/2] = " << _vec[i + pairSize/2] << std::endl;
+        if (_vec[i] > _vec[i + pairSize/2])
+            std::swap(_vec[i], _vec[i + pairSize/2]);
+    }
+    if (pairSize < _vec.size()/3)
+    {
+        sort(it * 2, pairSize * 2);
     }
 }
 

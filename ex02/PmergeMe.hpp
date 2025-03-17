@@ -13,7 +13,7 @@ class PmergeMe
     public:
         PmergeMe(int argc, char **argv);
         void    printVec();
-        void    sort();
+        void    sort(size_t it, size_t pairSize);
         //void    createPairs();
         //void    printPairs();
         //void    sortPairs();
