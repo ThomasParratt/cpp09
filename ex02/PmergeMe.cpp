@@ -24,9 +24,13 @@ void    PmergeMe::sort(size_t it, size_t pairSize)
     printVec();
     for (size_t i = it - 1; i + pairSize/2 < _vec.size(); i += pairSize)
     {
+        //std::cout << "_vec[i] = " << _vec[i] << "  " << "_vec[i + pairSize/2] = " << _vec[i + pairSize/2] << std::endl;
+        //if (_vec[i] > _vec[i + pairSize/2])
+        //    std::swap(_vec[i], _vec[i + pairSize/2]);
+
         std::cout << "_vec[i] = " << _vec[i] << "  " << "_vec[i + pairSize/2] = " << _vec[i + pairSize/2] << std::endl;
         if (_vec[i] > _vec[i + pairSize/2])
-            std::swap(_vec[i], _vec[i + pairSize/2]);
+            std::swap_ranges(_vec.begin() + i, _vec.begin() + (i + pairSize/2), _vec.begin() + (i + pairSize/2));
     }
     if (pairSize < _vec.size()/3)
     {
