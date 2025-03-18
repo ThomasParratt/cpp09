@@ -6,6 +6,15 @@ PmergeMe::PmergeMe(int argc, char **argv)
     {
         _vec.push_back(std::stoul(argv[i]));
     }
+
+    _jacobSeq.push_back(0);
+    _jacobSeq.push_back(1);
+    int i = 2;
+    while (_jacobSeq.back() < _vec.size()) 
+    {
+        _jacobSeq.push_back(_jacobSeq[i-1] + 2 * _jacobSeq[i-2]);
+        i++;
+    }
 }
 
 void    PmergeMe::printVec(std::string str, std::vector<unsigned int>& vec)
@@ -77,19 +86,42 @@ void PmergeMe::mergeInsertSort()
     if (_vec.size() % 2 != 0) mainChain.push_back(_vec.back());
     // Replace internal _vec with main chain for recursive sort
     _vec = mainChain;
-    //sort(1); // Start recursive group sort //SHOULD THIS NOT BE INCLUDED?
-    //or this??
     if (_vec.size() > 1) 
     {
-        mergeInsertSort(); // Recursively sort the vector // THIS WORKS!! // NOW NEED JACOBSTHAL
+        mergeInsertSort(); // Recursively sort the vector
     }
     printVec("mainChain = ", mainChain);
     printVec("pending = ", pending);
-    // Step 2: Insert pending elements using binary insert
-    for (int val : pending) 
+    // // Step 2: Insert pending elements using binary insert 
+    // for (int val : pending) 
+    // {
+    //     binaryInsert(_vec, val);
+    //     std::cout << "After inserting " << val << ": ";
+    //     printVec("", _vec);
+    // }
+
+    // Step 2: Insert pending elements using binary insert, but use Jacobsthal numbers
+    std::vector<bool> tracker(pending.size(), false); // Track which elements have been inserted
+    size_t jacobIdx = 0;
+
+    for (size_t i = 0; i < pending.size(); i++) 
     {
-        binaryInsert(_vec, val);
-        std::cout << "After inserting " << val << ": ";
+        // Use Jacobsthal sequence to determine whether to insert this pending value
+        if (jacobIdx < _jacobSeq.size() && _jacobSeq[jacobIdx] == i) 
+        {
+            // If the current index matches a Jacobsthal number, perform the binary insert
+            binaryInsert(_vec, pending[i]);
+            std::cout << "After inserting " << pending[i] << " (Jacobsthal " << _jacobSeq[jacobIdx] << "): ";
+            printVec("", _vec);
+            jacobIdx++; // Move to the next Jacobsthal number
+        }
+    }
+    
+    // Insert remaining elements if not yet inserted using Jacobsthal
+    for (size_t i = jacobIdx; i < pending.size(); i++) 
+    {
+        binaryInsert(_vec, pending[i]);
+        std::cout << "After inserting " << pending[i] << ": ";
         printVec("", _vec);
     }
 }

@@ -8,6 +8,7 @@ class PmergeMe
 {
     private:
         std::vector<unsigned int>   _vec;
+        std::vector<unsigned int>   _jacobSeq;
         //std::vector<std::pair<unsigned int, unsigned int>> _seq;
         //unsigned int    _odd;
         //bool            _isOdd = false;
