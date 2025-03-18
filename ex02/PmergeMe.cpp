@@ -8,9 +8,10 @@ PmergeMe::PmergeMe(int argc, char **argv)
     }
 }
 
-void    PmergeMe::printVec()
+void    PmergeMe::printVec(std::string str, std::vector<unsigned int>& vec)
 {
-    for (auto &it : _vec)
+    std::cout << str;
+    for (auto &it : vec)
     {
         std::cout << it << " ";
     }
@@ -74,7 +75,6 @@ void PmergeMe::mergeInsertSort()
     }
     // Handle leftover
     if (_vec.size() % 2 != 0) mainChain.push_back(_vec.back());
-
     // Replace internal _vec with main chain for recursive sort
     _vec = mainChain;
     //sort(1); // Start recursive group sort //SHOULD THIS NOT BE INCLUDED?
@@ -83,18 +83,15 @@ void PmergeMe::mergeInsertSort()
     {
         mergeInsertSort(); // Recursively sort the vector // THIS WORKS!! // NOW NEED JACOBSTHAL
     }
-
+    printVec("mainChain = ", mainChain);
+    printVec("pending = ", pending);
     // Step 2: Insert pending elements using binary insert
     for (int val : pending) 
     {
         binaryInsert(_vec, val);
         std::cout << "After inserting " << val << ": ";
-        printVec();
+        printVec("", _vec);
     }
-
-    // Final output
-    std::cout << "Final sorted array: ";
-    printVec();
 }
 
 

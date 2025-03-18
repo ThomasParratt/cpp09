@@ -13,7 +13,7 @@ class PmergeMe
         //bool            _isOdd = false;
     public:
         PmergeMe(int argc, char **argv);
-        void    printVec();
+        void    printVec(std::string str, std::vector<unsigned int>& vec);
         //void    sort(size_t groupSize);
         void    binaryInsert(std::vector<unsigned int>& sorted, int value);
         void    mergeInsertSort();
