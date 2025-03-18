@@ -15,6 +15,7 @@ PmergeMe::PmergeMe(int argc, char **argv)
         _jacobSeq.push_back(_jacobSeq[i-1] + 2 * _jacobSeq[i-2]);
         i++;
     }
+    printVec("_jacobSeq = ", _jacobSeq);
 }
 
 void    PmergeMe::printVec(std::string str, std::vector<unsigned int>& vec)
