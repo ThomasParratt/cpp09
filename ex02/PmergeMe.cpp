@@ -37,13 +37,9 @@ void PmergeMe::sort(size_t groupSize)
         if (leftCompare > rightCompare && (leftStart + groupSize - 1 < _vec.size()) && (rightStart + groupSize - 1 < _vec.size())) 
         {
             std::cout << "Swapping groups starting at " << leftStart << " and " << rightStart << std::endl;
-            std::swap_ranges(_vec.begin() + leftStart, 
-                             _vec.begin() + leftStart + groupSize, 
-                             _vec.begin() + rightStart);
+            std::swap_ranges(_vec.begin() + leftStart, _vec.begin() + leftStart + groupSize, _vec.begin() + rightStart);
         }
     }
-
-    // Recursive call to handle larger groupings
     sort(groupSize * 2);
 }
 
