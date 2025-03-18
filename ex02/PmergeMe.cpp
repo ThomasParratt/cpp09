@@ -50,13 +50,13 @@ void PmergeMe::binaryInsert(std::vector<unsigned int>& sorted, int value)
     sorted.insert(pos, value);
 }
 
-// ✅ Full merge-insert sort driver
+// Full merge-insert sort driver
 void PmergeMe::mergeInsertSort() 
 {
     std::vector<unsigned int> mainChain; //larger
     std::vector<unsigned int> pending; //smaller
 
-    // ✅ Step 1: Pairing
+    //Step 1: Pairing
     for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
     {
         int first = _vec[i];
@@ -75,19 +75,19 @@ void PmergeMe::mergeInsertSort()
     // Handle leftover
     if (_vec.size() % 2 != 0) mainChain.push_back(_vec.back());
 
-    // ✅ Replace internal _vec with main chain for recursive sort
+    // Replace internal _vec with main chain for recursive sort
     _vec = mainChain;
     sort(1); // Start recursive group sort
 
-    // ✅ Step 2: Insert pending elements using binary insert
+    // Step 2: Insert pending elements using binary insert
     for (int val : pending) 
     {
         binaryInsert(_vec, val);
-        std::cout << "After inserting pending: ";
+        std::cout << "After inserting " << val << ": ";
         printVec();
     }
 
-    // ✅ Final output
+    // Final output
     std::cout << "Final sorted array: ";
     printVec();
 }
