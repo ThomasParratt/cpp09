@@ -17,26 +17,36 @@ void    PmergeMe::printVec()
     std::cout << std::endl;
 }
 
-void    PmergeMe::sort(size_t it, size_t pairSize)
+void PmergeMe::sort(size_t groupSize) 
 {
-    std::cout << "it = " << it << std::endl;
-    std::cout << "pairSize = " << pairSize << std::endl;
-    printVec();
-    for (size_t i = it - 1; i + pairSize/2 < _vec.size(); i += pairSize)
-    {
-        //std::cout << "_vec[i] = " << _vec[i] << "  " << "_vec[i + pairSize/2] = " << _vec[i + pairSize/2] << std::endl;
-        //if (_vec[i] > _vec[i + pairSize/2])
-        //    std::swap(_vec[i], _vec[i + pairSize/2]);
+    if (groupSize > _vec.size()) return;  // Base case: when group size exceeds vector size
 
-        std::cout << "_vec[i] = " << _vec[i] << "  " << "_vec[i + pairSize/2] = " << _vec[i + pairSize/2] << std::endl;
-        if (_vec[i] > _vec[i + pairSize/2])
-            std::swap_ranges(_vec.begin() + i, _vec.begin() + (i + pairSize/2), _vec.begin() + (i + pairSize/2)); //the problem here is that the range size starts at the number we are comparing
-    }
-    if (pairSize < _vec.size()/3)
+    std::cout << "groupSize = " << groupSize << std::endl;
+    printVec();
+
+    for (size_t i = 0; i + groupSize < _vec.size(); i += 2 * groupSize) 
     {
-        sort(it * 2, pairSize * 2);
+        size_t leftStart = i;
+        size_t rightStart = i + groupSize;
+
+        // Find comparison points (e.g., last of left group, last of right group)
+        int leftCompare = _vec[leftStart + groupSize - 1];
+        int rightCompare = _vec[rightStart + groupSize - 1];
+
+        // If the left group "should" be after the right group, swap them
+        if (leftCompare > rightCompare && (leftStart + groupSize - 1 < _vec.size()) && (rightStart + groupSize - 1 < _vec.size())) 
+        {
+            std::cout << "Swapping groups starting at " << leftStart << " and " << rightStart << std::endl;
+            std::swap_ranges(_vec.begin() + leftStart, 
+                             _vec.begin() + leftStart + groupSize, 
+                             _vec.begin() + rightStart);
+        }
     }
+
+    // Recursive call to handle larger groupings
+    sort(groupSize * 2);
 }
+
 
 /*void    PmergeMe::createPairs()
 {
