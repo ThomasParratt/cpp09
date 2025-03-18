@@ -65,7 +65,8 @@ void PmergeMe::mergeInsertSort()
         {
             mainChain.push_back(first);
             pending.push_back(second);
-        } else 
+        } 
+        else 
         {
             mainChain.push_back(second);
             pending.push_back(first);
