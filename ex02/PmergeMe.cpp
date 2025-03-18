@@ -43,6 +43,54 @@ void PmergeMe::sort(size_t groupSize)
     sort(groupSize * 2);
 }
 
+// ✅ Binary search insert helper
+void PmergeMe::binaryInsert(std::vector<unsigned int>& sorted, int value) 
+{
+    auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
+    sorted.insert(pos, value);
+}
+
+// ✅ Full merge-insert sort driver
+void PmergeMe::mergeInsertSort() 
+{
+    std::vector<unsigned int> mainChain; //larger
+    std::vector<unsigned int> pending; //smaller
+
+    // ✅ Step 1: Pairing
+    for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
+    {
+        int first = _vec[i];
+        int second = _vec[i + 1];
+        if (first > second) 
+        {
+            mainChain.push_back(first);
+            pending.push_back(second);
+        } else 
+        {
+            mainChain.push_back(second);
+            pending.push_back(first);
+        }
+    }
+    // Handle leftover
+    if (_vec.size() % 2 != 0) mainChain.push_back(_vec.back());
+
+    // ✅ Replace internal _vec with main chain for recursive sort
+    _vec = mainChain;
+    sort(1); // Start recursive group sort
+
+    // ✅ Step 2: Insert pending elements using binary insert
+    for (int val : pending) 
+    {
+        binaryInsert(_vec, val);
+        std::cout << "After inserting pending: ";
+        printVec();
+    }
+
+    // ✅ Final output
+    std::cout << "Final sorted array: ";
+    printVec();
+}
+
 
 /*void    PmergeMe::createPairs()
 {

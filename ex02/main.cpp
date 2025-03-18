@@ -8,9 +8,14 @@ int main(int argc, char **argv)
         exit(1);
     }
     PmergeMe sorter = PmergeMe(argc, argv);
-    sorter.printVec();
-    sorter.sort(1);
-    sorter.printVec();
+
+    sorter.mergeInsertSort();
+
+    //sorter.printVec();
+    //sorter.sort(1);
+    //sorter.printVec();
+
+
     //sorter.printPairs();
     //sorter.sortPairs();
     //sorter.printPairs();

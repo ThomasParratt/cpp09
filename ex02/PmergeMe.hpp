@@ -15,6 +15,8 @@ class PmergeMe
         PmergeMe(int argc, char **argv);
         void    printVec();
         void    sort(size_t groupSize);
+        void    binaryInsert(std::vector<unsigned int>& sorted, int value);
+        void    mergeInsertSort();
         //void    createPairs();
         //void    printPairs();
         //void    sortPairs();
