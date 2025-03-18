@@ -17,33 +17,33 @@ void    PmergeMe::printVec()
     std::cout << std::endl;
 }
 
-void PmergeMe::sort(size_t groupSize) 
-{
-    if (groupSize > _vec.size()) return;  // Base case: when group size exceeds vector size
+// void PmergeMe::sort(size_t groupSize) 
+// {
+//     if (groupSize > _vec.size()) return;  // Base case: when group size exceeds vector size
 
-    std::cout << "groupSize = " << groupSize << std::endl;
-    printVec();
+//     std::cout << "groupSize = " << groupSize << std::endl;
+//     printVec();
 
-    for (size_t i = 0; i + groupSize < _vec.size(); i += 2 * groupSize) 
-    {
-        size_t leftStart = i;
-        size_t rightStart = i + groupSize;
+//     for (size_t i = 0; i + groupSize < _vec.size(); i += 2 * groupSize) 
+//     {
+//         size_t leftStart = i;
+//         size_t rightStart = i + groupSize;
 
-        // Find comparison points (e.g., last of left group, last of right group)
-        int leftCompare = _vec[leftStart + groupSize - 1];
-        int rightCompare = _vec[rightStart + groupSize - 1];
+//         // Find comparison points (e.g., last of left group, last of right group)
+//         int leftCompare = _vec[leftStart + groupSize - 1];
+//         int rightCompare = _vec[rightStart + groupSize - 1];
 
-        // If the left group "should" be after the right group, swap them
-        if (leftCompare > rightCompare && (leftStart + groupSize - 1 < _vec.size()) && (rightStart + groupSize - 1 < _vec.size())) 
-        {
-            std::cout << "Swapping groups starting at " << leftStart << " and " << rightStart << std::endl;
-            std::swap_ranges(_vec.begin() + leftStart, _vec.begin() + leftStart + groupSize, _vec.begin() + rightStart);
-        }
-    }
-    sort(groupSize * 2);
-}
+//         // If the left group "should" be after the right group, swap them
+//         if (leftCompare > rightCompare && (leftStart + groupSize - 1 < _vec.size()) && (rightStart + groupSize - 1 < _vec.size())) 
+//         {
+//             std::cout << "Swapping groups starting at " << leftStart << " and " << rightStart << std::endl;
+//             std::swap_ranges(_vec.begin() + leftStart, _vec.begin() + leftStart + groupSize, _vec.begin() + rightStart);
+//         }
+//     }
+//     sort(groupSize * 2);
+// }
 
-// ✅ Binary search insert helper
+// Binary search insert helper
 void PmergeMe::binaryInsert(std::vector<unsigned int>& sorted, int value) 
 {
     auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
@@ -77,7 +77,12 @@ void PmergeMe::mergeInsertSort()
 
     // Replace internal _vec with main chain for recursive sort
     _vec = mainChain;
-    sort(1); // Start recursive group sort
+    //sort(1); // Start recursive group sort //SHOULD THIS NOT BE INCLUDED?
+    //or this??
+    if (_vec.size() > 1) 
+    {
+        mergeInsertSort(); // Recursively sort the vector // THIS WORKS!! // NOW NEED JACOBSTHAL
+    }
 
     // Step 2: Insert pending elements using binary insert
     for (int val : pending) 
