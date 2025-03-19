@@ -12,8 +12,8 @@ PmergeMe::PmergeMe(int argc, char **argv)
         std::cerr << "Invalid input: " << e.what() << std::endl;
         exit(1);
     }
-    printVec("Initial vector = ", _vec);
-    std::cout << "vector size = " << _vec.size() << std::endl;
+    //printVec("Initial vector = ", _vec);
+    //std::cout << "vector size = " << _vec.size() << std::endl;
     generateJacobsthal();
 }
 
@@ -27,8 +27,8 @@ void PmergeMe::generateJacobsthal()
         _jacob.push_back(_jacob[i - 1] + 2 * _jacob[i - 2]);
         i++;
     }
-    printVec("Jacobsthal sequence = ", _jacob);
-    std::cout << std::endl;
+    //printVec("Jacobsthal sequence = ", _jacob);
+    //std::cout << std::endl;
 }
 
 void PmergeMe::printVec(const std::string& label, const std::vector<unsigned int>& vec) 
@@ -78,8 +78,8 @@ void PmergeMe::mergeInsertSort()
     _vec = mainChain;
     mergeInsertSort();  // Sort the main chain first
 
-    printVec("Sorted mainChain = ", _vec);
-    printVec("Pending elements = ", pending);
+    //printVec("Sorted mainChain = ", _vec);
+    //printVec("Pending elements = ", pending);
 
     // Step 2: Insert pending elements using Jacobsthal sequence
     std::vector<bool> inserted(pending.size(), false);
@@ -93,8 +93,8 @@ void PmergeMe::mergeInsertSort()
             continue;
         binaryInsert(_vec, pending[idx]);
         inserted[idx] = true;
-        std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
-        printVec("", _vec);
+        //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
+        //printVec("", _vec);
     }
 
     // Step 3: Insert any remaining pending elements not covered by Jacobsthal
@@ -103,11 +103,11 @@ void PmergeMe::mergeInsertSort()
         if (!inserted[i]) 
         {
             binaryInsert(_vec, pending[i]);
-            std::cout << "After inserting remaining " << pending[i] << ": ";
-            printVec("", _vec);
+            //std::cout << "After inserting remaining " << pending[i] << ": ";
+            //printVec("", _vec);
         }
     }
-    std::cout << std::endl;
+    //std::cout << std::endl;
 }
 
 std::vector<unsigned int>   PmergeMe::getVec()

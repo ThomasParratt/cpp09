@@ -9,7 +9,11 @@ int main(int argc, char **argv)
     }
     PmergeMe sorter = PmergeMe(argc, argv);
 
+    sorter.printVec("Before: ", sorter.getVec());
+    auto start = std::chrono::high_resolution_clock::now();
     sorter.mergeInsertSort();
-    sorter.printVec("Final result = ", sorter.getVec());
-    std::cout << "vector size = " << sorter.getVec().size() << std::endl;
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Time to process a range of " << sorter.getVec().size() << " elements with std::vector: " << duration.count() << " us\n";
+    sorter.printVec("After:  ", sorter.getVec());
 }
