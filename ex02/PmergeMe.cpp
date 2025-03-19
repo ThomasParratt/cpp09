@@ -1,77 +1,61 @@
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe(int argc, char **argv)
+PmergeMe::PmergeMe(int argc, char **argv) 
 {
-    for (int i = 1; i < argc; i++)
+    try 
     {
-        _vec.push_back(std::stoul(argv[i]));
-    }
-
-    _jacobSeq.push_back(0);
-    _jacobSeq.push_back(1);
-    int i = 2;
-    while (_jacobSeq.back() < _vec.size()) 
+        for (int i = 1; i < argc; i++) 
+            _vec.push_back(std::stoul(argv[i]));
+    } 
+    catch (std::exception& e) 
     {
-        _jacobSeq.push_back(_jacobSeq[i-1] + 2 * _jacobSeq[i-2]);
-        i++;
+        std::cerr << "Invalid input: " << e.what() << std::endl;
+        exit(1);
     }
-    printVec("_jacobSeq = ", _jacobSeq);
+    generateJacobsthal();
+    printVec("Initial vector = ", _vec);
 }
 
-void    PmergeMe::printVec(std::string str, std::vector<unsigned int>& vec)
+void PmergeMe::generateJacobsthal() 
 {
-    std::cout << str;
-    for (auto &it : vec)
+    _jacobSeq.push_back(0);
+    _jacobSeq.push_back(1);
+    unsigned int i = 2;
+    while (_jacobSeq.back() < _vec.size()) 
     {
-        std::cout << it << " ";
+        _jacobSeq.push_back(_jacobSeq[i - 1] + 2 * _jacobSeq[i - 2]);
+        i++;
     }
+    printVec("Jacobsthal sequence = ", _jacobSeq);
+}
+
+void PmergeMe::printVec(const std::string& label, const std::vector<unsigned int>& vec) 
+{
+    std::cout << label;
+    for (auto val : vec) 
+        std::cout << val << " ";
     std::cout << std::endl;
 }
 
-// void PmergeMe::sort(size_t groupSize) 
-// {
-//     if (groupSize > _vec.size()) return;  // Base case: when group size exceeds vector size
-
-//     std::cout << "groupSize = " << groupSize << std::endl;
-//     printVec();
-
-//     for (size_t i = 0; i + groupSize < _vec.size(); i += 2 * groupSize) 
-//     {
-//         size_t leftStart = i;
-//         size_t rightStart = i + groupSize;
-
-//         // Find comparison points (e.g., last of left group, last of right group)
-//         int leftCompare = _vec[leftStart + groupSize - 1];
-//         int rightCompare = _vec[rightStart + groupSize - 1];
-
-//         // If the left group "should" be after the right group, swap them
-//         if (leftCompare > rightCompare && (leftStart + groupSize - 1 < _vec.size()) && (rightStart + groupSize - 1 < _vec.size())) 
-//         {
-//             std::cout << "Swapping groups starting at " << leftStart << " and " << rightStart << std::endl;
-//             std::swap_ranges(_vec.begin() + leftStart, _vec.begin() + leftStart + groupSize, _vec.begin() + rightStart);
-//         }
-//     }
-//     sort(groupSize * 2);
-// }
-
-// Binary search insert helper
-void PmergeMe::binaryInsert(std::vector<unsigned int>& sorted, int value) 
+void PmergeMe::binaryInsert(std::vector<unsigned int>& sorted, unsigned int value) 
 {
     auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
     sorted.insert(pos, value);
 }
 
-// Full merge-insert sort driver
 void PmergeMe::mergeInsertSort() 
 {
-    std::vector<unsigned int> mainChain; //larger
-    std::vector<unsigned int> pending; //smaller
+    if (_vec.size() <= 1) 
+        return;
 
-    //Step 1: Pairing
+    // Step 1: Pairing and creating mainChain and pending vectors
+    std::vector<unsigned int> mainChain;
+    std::vector<unsigned int> pending;
+
     for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
     {
-        int first = _vec[i];
-        int second = _vec[i + 1];
+        unsigned int first = _vec[i];
+        unsigned int second = _vec[i + 1];
         if (first > second) 
         {
             mainChain.push_back(first);
@@ -83,114 +67,41 @@ void PmergeMe::mergeInsertSort()
             pending.push_back(first);
         }
     }
-    // Handle leftover
-    if (_vec.size() % 2 != 0) mainChain.push_back(_vec.back());
-    // Replace internal _vec with main chain for recursive sort
+
+    // If odd, last element goes to mainChain
+    if (_vec.size() % 2 != 0) 
+        mainChain.push_back(_vec.back());
+
+    // Recursive sort on mainChain
     _vec = mainChain;
-    if (_vec.size() > 1) 
-    {
-        mergeInsertSort(); // Recursively sort the vector
-    }
-    printVec("mainChain = ", mainChain);
-    printVec("pending = ", pending);
-    // // Step 2: Insert pending elements using binary insert 
-    // for (int val : pending) 
-    // {
-    //     binaryInsert(_vec, val);
-    //     std::cout << "After inserting " << val << ": ";
-    //     printVec("", _vec);
-    // }
+    mergeInsertSort();  // Sort the main chain first
 
-    // Step 2: Insert pending elements using binary insert, but use Jacobsthal numbers
-    std::vector<bool> tracker(pending.size(), false); // Track which elements have been inserted
-    size_t jacobIdx = 0;
+    printVec("Sorted mainChain = ", _vec);
+    printVec("Pending elements = ", pending);
 
-    for (size_t i = 0; i < pending.size(); i++) 
+    // Step 2: Insert pending elements using Jacobsthal sequence
+    std::vector<bool> inserted(pending.size(), false);
+
+    for (size_t j = 0; j < _jacobSeq.size(); j++) 
     {
-        // Use Jacobsthal sequence to determine whether to insert this pending value
-        if (jacobIdx < _jacobSeq.size() && _jacobSeq[jacobIdx] == i) 
-        {
-            // If the current index matches a Jacobsthal number, perform the binary insert
-            binaryInsert(_vec, pending[i]);
-            std::cout << "After inserting " << pending[i] << " (Jacobsthal " << _jacobSeq[jacobIdx] << "): ";
-            printVec("", _vec);
-            jacobIdx++; // Move to the next Jacobsthal number
-        }
-    }
-    
-    // Insert remaining elements if not yet inserted using Jacobsthal
-    for (size_t i = jacobIdx; i < pending.size(); i++) 
-    {
-        binaryInsert(_vec, pending[i]);
-        std::cout << "After inserting " << pending[i] << ": ";
+        size_t idx = _jacobSeq[j];
+        if (idx >= pending.size()) 
+            break;
+        binaryInsert(_vec, pending[idx]);
+        inserted[idx] = true;
+        std::cout << "After inserting (Jacobsthal " << _jacobSeq[j] << ") " << pending[idx] << ": ";
         printVec("", _vec);
     }
-}
 
-
-/*void    PmergeMe::createPairs()
-{
-    std::cout << "Creating pairs.." << std::endl;
-    std::vector<std::pair<unsigned int, unsigned int>> _seq2;
-    unsigned int    _odd2;
-    bool            _isOdd2 = false;
-
-    std::cout << "Size of _seq = " << sizeof(_seq) << std::endl;
-    for (size_t i = 0; i < sizeof(_seq) / 5; i+=2) //Probelsm with size. Seems to work when divide by 5...
+    // Step 3: Insert any remaining pending elements not covered by Jacobsthal
+    for (size_t i = 0; i < pending.size(); i++) 
     {
-        if (i + 1 < sizeof(_seq))
-            _seq2.push_back(std::make_pair(_seq[i].first, _seq[i + 1].first));
-        else
+        if (!inserted[i]) 
         {
-            _isOdd2 = true;
-            _odd2 = _seq[i].first;
-        }
-    }
-    //Print _seq2 pairs
-    for (auto &it : _seq2)
-        std::cout << "First: " << it.first << ", Second: " << it.second << std::endl;
-    if (_isOdd2)
-        std::cout << "First: " << _odd2 << std::endl;
-    //Sort _seq2 pairs
-    for (auto &it : _seq2)
-    {
-        if (it.first > it.second)
-        {
-            std::swap(it.first, it.second);
-        }
-    }
-    //Print _seq2 pairs
-    for (auto &it : _seq2)
-        std::cout << "First: " << it.first << ", Second: " << it.second << std::endl;
-    if (_isOdd2)
-        std::cout << "First: " << _odd2 << std::endl;
-}
-
-void    PmergeMe::printPairs()
-{
-    std::cout << "Printing pairs..." << std::endl;
-    for (auto &it : _seq)
-        std::cout << "First: " << it.first << ", Second: " << it.second << std::endl;
-    if (_isOdd)
-        std::cout << "First: " << _odd << std::endl;
-}
-
-void    PmergeMe::sortPairs()
-{
-    std::cout << "Sorting pairs..." << std::endl; 
-    for (auto &it : _seq)
-    {
-        if (it.first > it.second)
-        {
-            std::swap(it.first, it.second);
+            binaryInsert(_vec, pending[i]);
+            std::cout << "After inserting remaining " << pending[i] << ": ";
+            printVec("", _vec);
         }
     }
 }
 
-void    PmergeMe::extractSmallerElements()
-{
-    for (auto &it : _seq)
-    {
-        
-    }
-}*/
