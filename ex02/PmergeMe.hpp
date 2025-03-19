@@ -8,7 +8,7 @@ class PmergeMe
 {
     private:
         std::vector<unsigned int>   _vec;
-        std::vector<unsigned int>   _jacobSeq;
+        std::vector<unsigned int>   _jacob;
     public:
         PmergeMe(int argc, char **argv);
         void    generateJacobsthal();

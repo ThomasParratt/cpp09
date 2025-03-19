@@ -12,21 +12,22 @@ PmergeMe::PmergeMe(int argc, char **argv)
         std::cerr << "Invalid input: " << e.what() << std::endl;
         exit(1);
     }
-    generateJacobsthal();
     printVec("Initial vector = ", _vec);
+    generateJacobsthal();
 }
 
 void PmergeMe::generateJacobsthal() 
 {
-    _jacobSeq.push_back(0);
-    _jacobSeq.push_back(1);
+    _jacob.push_back(0);
+    _jacob.push_back(1);
     unsigned int i = 2;
-    while (_jacobSeq.back() < _vec.size()) 
+    while (_jacob.back() < _vec.size()) 
     {
-        _jacobSeq.push_back(_jacobSeq[i - 1] + 2 * _jacobSeq[i - 2]);
+        _jacob.push_back(_jacob[i - 1] + 2 * _jacob[i - 2]);
         i++;
     }
-    printVec("Jacobsthal sequence = ", _jacobSeq);
+    printVec("Jacobsthal sequence = ", _jacob);
+    std::cout << std::endl;
 }
 
 void PmergeMe::printVec(const std::string& label, const std::vector<unsigned int>& vec) 
@@ -46,7 +47,7 @@ void PmergeMe::binaryInsert(std::vector<unsigned int>& sorted, unsigned int valu
 void PmergeMe::mergeInsertSort() 
 {
     if (_vec.size() <= 1) 
-        return;
+        return ;
 
     // Step 1: Pairing and creating mainChain and pending vectors
     std::vector<unsigned int> mainChain;
@@ -82,14 +83,20 @@ void PmergeMe::mergeInsertSort()
     // Step 2: Insert pending elements using Jacobsthal sequence
     std::vector<bool> inserted(pending.size(), false);
 
-    for (size_t j = 0; j < _jacobSeq.size(); j++) 
+    for (size_t j = 0; j < _jacob.size(); j++) 
     {
-        size_t idx = _jacobSeq[j];
+        size_t idx = _jacob[j];
         if (idx >= pending.size()) 
-            break;
+            break ;
         binaryInsert(_vec, pending[idx]);
         inserted[idx] = true;
-        std::cout << "After inserting (Jacobsthal " << _jacobSeq[j] << ") " << pending[idx] << ": ";
+        if (_jacob[j] == _jacob[j + 1])
+        {
+            inserted[idx + 1] = true;
+            j++;
+            continue ;
+        }
+        std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
         printVec("", _vec);
     }
 
@@ -103,5 +110,6 @@ void PmergeMe::mergeInsertSort()
             printVec("", _vec);
         }
     }
+    std::cout << std::endl;
 }
 
