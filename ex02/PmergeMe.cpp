@@ -74,8 +74,8 @@ void PmergeMe::mergeInsertSortVector()
         return ;
 
     // Step 1: Pairing and creating mainChain and pending vectors
-    std::vector<unsigned int> mainChain;
-    std::vector<unsigned int> pending;
+    std::vector<unsigned int> larger;
+    std::vector<unsigned int> smaller;
 
     for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
     {
@@ -83,49 +83,49 @@ void PmergeMe::mergeInsertSortVector()
         unsigned int second = _vec[i + 1];
         if (first > second) 
         {
-            mainChain.push_back(first);
-            pending.push_back(second);
+            larger.push_back(first);
+            smaller.push_back(second);
         } 
         else 
         {
-            mainChain.push_back(second);
-            pending.push_back(first);
+            larger.push_back(second);
+            smaller.push_back(first);
         }
     }
 
     // If odd, last element goes to mainChain
     if (_vec.size() % 2 != 0) 
-        mainChain.push_back(_vec.back());
+        larger.push_back(_vec.back());
 
     // Recursive sort on mainChain
-    _vec = mainChain;
+    _vec = larger;
     mergeInsertSortVector();  // Sort the main chain first
 
     //printVec("Sorted mainChain = ", _vec);
     //printVec("Pending elements = ", pending);
 
     // Step 2: Insert pending elements using Jacobsthal sequence
-    std::vector<bool> inserted(pending.size(), false);
+    std::vector<bool> inserted(smaller.size(), false);
 
     for (size_t j = 0; j < _jacob.size(); j++) 
     {
         size_t idx = _jacob[j];
-        if (idx >= pending.size()) 
+        if (idx >= smaller.size()) 
             break ;
         if (inserted[idx]) // Skip the double 1
             continue;
-        binaryInsertVec(_vec, pending[idx]);
+        binaryInsertVec(_vec, smaller[idx]);
         inserted[idx] = true;
         //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
         //printVec("", _vec);
     }
 
     // Step 3: Insert any remaining pending elements not covered by Jacobsthal
-    for (size_t i = 0; i < pending.size(); i++) 
+    for (size_t i = 0; i < smaller.size(); i++) 
     {
         if (!inserted[i]) 
         {
-            binaryInsertVec(_vec, pending[i]);
+            binaryInsertVec(_vec, smaller[i]);
             //std::cout << "After inserting remaining " << pending[i] << ": ";
             //printVec("", _vec);
         }
@@ -139,8 +139,8 @@ void PmergeMe::mergeInsertSortDeque()
         return ;
 
     // Step 1: Pairing and creating mainChain and pending vectors
-    std::deque<unsigned int> mainChain;
-    std::deque<unsigned int> pending;
+    std::deque<unsigned int> larger;
+    std::deque<unsigned int> smaller;
 
     for (size_t i = 0; i + 1 < _deq.size(); i += 2) 
     {
@@ -148,49 +148,49 @@ void PmergeMe::mergeInsertSortDeque()
         unsigned int second = _deq[i + 1];
         if (first > second) 
         {
-            mainChain.push_back(first);
-            pending.push_back(second);
+            larger.push_back(first);
+            smaller.push_back(second);
         } 
         else 
         {
-            mainChain.push_back(second);
-            pending.push_back(first);
+            larger.push_back(second);
+            smaller.push_back(first);
         }
     }
 
     // If odd, last element goes to mainChain
     if (_deq.size() % 2 != 0) 
-        mainChain.push_back(_deq.back());
+        larger.push_back(_deq.back());
 
     // Recursive sort on mainChain
-    _deq = mainChain;
+    _deq = larger;
     mergeInsertSortDeque();  // Sort the main chain first
 
     //printVec("Sorted mainChain = ", _vec);
     //printVec("Pending elements = ", pending);
 
     // Step 2: Insert pending elements using Jacobsthal sequence
-    std::deque<bool> inserted(pending.size(), false);
+    std::deque<bool> inserted(smaller.size(), false);
 
     for (size_t j = 0; j < _jacob.size(); j++) 
     {
         size_t idx = _jacob[j];
-        if (idx >= pending.size()) 
+        if (idx >= smaller.size()) 
             break ;
         if (inserted[idx]) // Skip the double 1
             continue;
-        binaryInsertDeq(_deq, pending[idx]);
+        binaryInsertDeq(_deq, smaller[idx]);
         inserted[idx] = true;
         //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
         //printVec("", _vec);
     }
 
     // Step 3: Insert any remaining pending elements not covered by Jacobsthal
-    for (size_t i = 0; i < pending.size(); i++) 
+    for (size_t i = 0; i < smaller.size(); i++) 
     {
         if (!inserted[i]) 
         {
-            binaryInsertDeq(_deq, pending[i]);
+            binaryInsertDeq(_deq, smaller[i]);
             //std::cout << "After inserting remaining " << pending[i] << ": ";
             //printVec("", _vec);
         }
