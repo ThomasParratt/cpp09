@@ -89,7 +89,7 @@ void PmergeMe::mergeInsertSort()
         size_t idx = _jacob[j];
         if (idx >= pending.size()) 
             break ;
-        if (inserted[idx]) // Already inserted, skip
+        if (inserted[idx]) // Skip the double 1
             continue;
         binaryInsert(_vec, pending[idx]);
         inserted[idx] = true;
