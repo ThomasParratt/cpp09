@@ -13,6 +13,7 @@ PmergeMe::PmergeMe(int argc, char **argv)
                 exit(1);
             }
             _vec.push_back(num);
+            _deq.push_back(num);
         }
     } 
     catch (std::exception& e) 
@@ -47,13 +48,27 @@ void PmergeMe::printVec(const std::string& label, const std::vector<unsigned int
     std::cout << std::endl;
 }
 
-void PmergeMe::binaryInsert(std::vector<unsigned int>& sorted, unsigned int value) 
+void PmergeMe::printDeq(const std::string& label, const std::deque<unsigned int>& deq) 
+{
+    std::cout << label;
+    for (auto val : deq) 
+        std::cout << val << " ";
+    std::cout << std::endl;
+}
+
+void PmergeMe::binaryInsertVec(std::vector<unsigned int>& sorted, unsigned int value) 
 {
     auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
     sorted.insert(pos, value);
 }
 
-void PmergeMe::mergeInsertSort() 
+void PmergeMe::binaryInsertDeq(std::deque<unsigned int>& sorted, unsigned int value)
+{
+    auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
+    sorted.insert(pos, value);
+}
+
+void PmergeMe::mergeInsertSortVector() 
 {
     if (_vec.size() <= 1) 
         return ;
@@ -84,7 +99,7 @@ void PmergeMe::mergeInsertSort()
 
     // Recursive sort on mainChain
     _vec = mainChain;
-    mergeInsertSort();  // Sort the main chain first
+    mergeInsertSortVector();  // Sort the main chain first
 
     //printVec("Sorted mainChain = ", _vec);
     //printVec("Pending elements = ", pending);
@@ -99,7 +114,7 @@ void PmergeMe::mergeInsertSort()
             break ;
         if (inserted[idx]) // Skip the double 1
             continue;
-        binaryInsert(_vec, pending[idx]);
+        binaryInsertVec(_vec, pending[idx]);
         inserted[idx] = true;
         //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
         //printVec("", _vec);
@@ -110,7 +125,72 @@ void PmergeMe::mergeInsertSort()
     {
         if (!inserted[i]) 
         {
-            binaryInsert(_vec, pending[i]);
+            binaryInsertVec(_vec, pending[i]);
+            //std::cout << "After inserting remaining " << pending[i] << ": ";
+            //printVec("", _vec);
+        }
+    }
+    //std::cout << std::endl;
+}
+
+void PmergeMe::mergeInsertSortDeque() 
+{
+    if (_deq.size() <= 1) 
+        return ;
+
+    // Step 1: Pairing and creating mainChain and pending vectors
+    std::deque<unsigned int> mainChain;
+    std::deque<unsigned int> pending;
+
+    for (size_t i = 0; i + 1 < _deq.size(); i += 2) 
+    {
+        unsigned int first = _deq[i];
+        unsigned int second = _deq[i + 1];
+        if (first > second) 
+        {
+            mainChain.push_back(first);
+            pending.push_back(second);
+        } 
+        else 
+        {
+            mainChain.push_back(second);
+            pending.push_back(first);
+        }
+    }
+
+    // If odd, last element goes to mainChain
+    if (_deq.size() % 2 != 0) 
+        mainChain.push_back(_deq.back());
+
+    // Recursive sort on mainChain
+    _deq = mainChain;
+    mergeInsertSortDeque();  // Sort the main chain first
+
+    //printVec("Sorted mainChain = ", _vec);
+    //printVec("Pending elements = ", pending);
+
+    // Step 2: Insert pending elements using Jacobsthal sequence
+    std::deque<bool> inserted(pending.size(), false);
+
+    for (size_t j = 0; j < _jacob.size(); j++) 
+    {
+        size_t idx = _jacob[j];
+        if (idx >= pending.size()) 
+            break ;
+        if (inserted[idx]) // Skip the double 1
+            continue;
+        binaryInsertDeq(_deq, pending[idx]);
+        inserted[idx] = true;
+        //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
+        //printVec("", _vec);
+    }
+
+    // Step 3: Insert any remaining pending elements not covered by Jacobsthal
+    for (size_t i = 0; i < pending.size(); i++) 
+    {
+        if (!inserted[i]) 
+        {
+            binaryInsertDeq(_deq, pending[i]);
             //std::cout << "After inserting remaining " << pending[i] << ": ";
             //printVec("", _vec);
         }
@@ -121,5 +201,10 @@ void PmergeMe::mergeInsertSort()
 std::vector<unsigned int>   PmergeMe::getVec()
 {
     return (_vec);
+}
+
+std::deque<unsigned int>   PmergeMe::getDeq()
+{
+    return (_deq);
 }
 
