@@ -4,8 +4,16 @@ PmergeMe::PmergeMe(int argc, char **argv)
 {
     try 
     {
-        for (int i = 1; i < argc; i++) 
-            _vec.push_back(std::stoul(argv[i]));
+        for (int i = 1; i < argc; i++)
+        {
+            int num = std::stoi(argv[i]);
+            if (num < 0)
+            {
+                std::cerr << "Error: Input cannot be negative" << std::endl;
+                exit(1);
+            }
+            _vec.push_back(num);
+        }
     } 
     catch (std::exception& e) 
     {

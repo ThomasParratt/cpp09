@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     auto start = std::chrono::high_resolution_clock::now();
     sorter.mergeInsertSort();
     auto end = std::chrono::high_resolution_clock::now();
+    sorter.printVec("After:  ", sorter.getVec());
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "Time to process a range of " << sorter.getVec().size() << " elements with std::vector: " << duration.count() << " us\n";
-    sorter.printVec("After:  ", sorter.getVec());
 }
