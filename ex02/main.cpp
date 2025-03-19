@@ -10,14 +10,6 @@ int main(int argc, char **argv)
     PmergeMe sorter = PmergeMe(argc, argv);
 
     sorter.mergeInsertSort();
-
-    //sorter.printVec();
-    //sorter.sort(1);
-    //sorter.printVec();
-
-
-    //sorter.printPairs();
-    //sorter.sortPairs();
-    //sorter.printPairs();
-    //sorter.createPairs();
+    sorter.printVec("Final result = ", sorter.getVec());
+    std::cout << "vector size = " << sorter.getVec().size() << std::endl;
 }

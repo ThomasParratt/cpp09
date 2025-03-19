@@ -13,6 +13,7 @@ PmergeMe::PmergeMe(int argc, char **argv)
         exit(1);
     }
     printVec("Initial vector = ", _vec);
+    std::cout << "vector size = " << _vec.size() << std::endl;
     generateJacobsthal();
 }
 
@@ -88,14 +89,10 @@ void PmergeMe::mergeInsertSort()
         size_t idx = _jacob[j];
         if (idx >= pending.size()) 
             break ;
+        if (inserted[idx]) // Already inserted, skip
+            continue;
         binaryInsert(_vec, pending[idx]);
         inserted[idx] = true;
-        if (_jacob[j] == _jacob[j + 1])
-        {
-            inserted[idx + 1] = true;
-            j++;
-            continue ;
-        }
         std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << pending[idx] << ": ";
         printVec("", _vec);
     }
@@ -111,5 +108,10 @@ void PmergeMe::mergeInsertSort()
         }
     }
     std::cout << std::endl;
+}
+
+std::vector<unsigned int>   PmergeMe::getVec()
+{
+    return (_vec);
 }
 
