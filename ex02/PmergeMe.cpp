@@ -36,7 +36,7 @@ void PmergeMe::generateJacobsthal()
     }
 }
 
-void PmergeMe::printVec(const std::string& label, const std::vector<unsigned int>& vec) 
+void PmergeMe::printVec(const std::string& label, const std::vector<int>& vec) 
 {
     std::cout << label;
     for (auto val : vec) 
@@ -44,7 +44,7 @@ void PmergeMe::printVec(const std::string& label, const std::vector<unsigned int
     std::cout << std::endl;
 }
 
-void PmergeMe::printDeq(const std::string& label, const std::deque<unsigned int>& deq) 
+void PmergeMe::printDeq(const std::string& label, const std::deque<int>& deq) 
 {
     std::cout << label;
     for (auto val : deq) 
@@ -52,13 +52,13 @@ void PmergeMe::printDeq(const std::string& label, const std::deque<unsigned int>
     std::cout << std::endl;
 }
 
-void PmergeMe::binaryInsertVec(std::vector<unsigned int>& sorted, unsigned int value) 
+void PmergeMe::binaryInsertVec(std::vector<int>& sorted, int value) 
 {
     auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
     sorted.insert(pos, value);
 }
 
-void PmergeMe::binaryInsertDeq(std::deque<unsigned int>& sorted, unsigned int value)
+void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value)
 {
     auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
     sorted.insert(pos, value);
@@ -70,13 +70,13 @@ void PmergeMe::mergeInsertSortVector()
         return ;
 
     // Step 1: Pairing and creating mainChain and pending vectors
-    std::vector<unsigned int> larger;
-    std::vector<unsigned int> smaller;
+    std::vector<int> larger;
+    std::vector<int> smaller;
 
     for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
     {
-        unsigned int first = _vec[i];
-        unsigned int second = _vec[i + 1];
+        int first = _vec[i];
+        int second = _vec[i + 1];
         if (first > second) 
         {
             larger.push_back(first);
@@ -139,13 +139,13 @@ void PmergeMe::mergeInsertSortDeque()
         return ;
 
     // Step 1: Pairing and creating mainChain and pending vectors
-    std::deque<unsigned int> larger;
-    std::deque<unsigned int> smaller;
+    std::deque<int> larger;
+    std::deque<int> smaller;
 
     for (size_t i = 0; i + 1 < _deq.size(); i += 2) 
     {
-        unsigned int first = _deq[i];
-        unsigned int second = _deq[i + 1];
+        int first = _deq[i];
+        int second = _deq[i + 1];
         if (first > second) 
         {
             larger.push_back(first);
@@ -188,12 +188,12 @@ void PmergeMe::mergeInsertSortDeque()
     }
 }
 
-std::vector<unsigned int>   PmergeMe::getVec()
+std::vector<int>   PmergeMe::getVec()
 {
     return (_vec);
 }
 
-std::deque<unsigned int>   PmergeMe::getDeq()
+std::deque<int>   PmergeMe::getDeq()
 {
     return (_deq);
 }

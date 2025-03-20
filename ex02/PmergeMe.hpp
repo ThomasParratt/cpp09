@@ -7,18 +7,18 @@
 class PmergeMe
 {
     private:
-        std::vector<unsigned int>   _jacob;
-        std::vector<unsigned int>   _vec;
-        std::deque<unsigned int>    _deq;
+        std::vector<size_t> _jacob;
+        std::vector<int>    _vec;
+        std::deque<int>     _deq;
     public:
         PmergeMe(int argc, char **argv);
         void    generateJacobsthal();
-        void    printVec(const std::string& label, const std::vector<unsigned int>& vec);
-        void    printDeq(const std::string& label, const std::deque<unsigned int>& deq); 
-        void    binaryInsertVec(std::vector<unsigned int>& sorted, unsigned int value);
-        void    binaryInsertDeq(std::deque<unsigned int>& sorted, unsigned int value);
+        void    printVec(const std::string& label, const std::vector<int>& vec);
+        void    printDeq(const std::string& label, const std::deque<int>& deq); 
+        void    binaryInsertVec(std::vector<int>& sorted, int value);
+        void    binaryInsertDeq(std::deque<int>& sorted, int value);
         void    mergeInsertSortVector();
         void    mergeInsertSortDeque();
-        std::vector<unsigned int>   getVec();
-        std::deque<unsigned int>   getDeq();
+        std::vector<int>    getVec();
+        std::deque<int>     getDeq();
 };
