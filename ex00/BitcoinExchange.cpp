@@ -14,7 +14,7 @@ void    btc::readData()
 
     if (!input)
     {
-        std::cerr << "Error opening file" << std::endl;
+        std::cerr << "Error: Could not open file" << std::endl;
         exit(1);
     }
 
@@ -45,7 +45,7 @@ void    btc::printResults()
 
     if (!input)
     {
-        std::cerr << "Error opening file" << std::endl;
+        std::cerr << "Error: Could not open file" << std::endl;
         exit(1);
     }
 
