@@ -12,7 +12,10 @@ class btc
         std::string _data;
         std::map<std::string, float>  _dataMap;
     public:
+        btc();
+        btc(const btc& obj);
         btc(std::string input, std::string data);
+        btc& operator=(const btc& obj);
         void    readData();
         void    printResults();
         bool    isValidDate(std::string date);
