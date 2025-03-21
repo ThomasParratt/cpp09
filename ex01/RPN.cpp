@@ -1,6 +1,6 @@
 #include "RPN.hpp"
 
-RPN::RPN()
+RPN::RPN() : _input("")
 {
 
 }
@@ -18,7 +18,7 @@ RPN::RPN(std::string input) : _input(input)
 RPN& RPN::operator=(const RPN& obj)
 {
     if (this != &obj)
-        *this = obj;
+        _input = obj._input;
     return (*this);
 }
 
@@ -31,6 +31,11 @@ void RPN::parseInput()
 {
     std::stack<int> values;
 
+    if (_input.empty())
+    {
+        std::cerr << "Error: Missing input" << std::endl;
+        return ;
+    }
     for (char c : _input)
     {
         if (isdigit(c))
@@ -84,5 +89,5 @@ void RPN::parseInput()
     if (values.size() == 1)
         std::cout << values.top() << std::endl;
     else
-        std::cerr << "Error: Invalid RPN expression or missing input" << std::endl;
+        std::cerr << "Error: Invalid RPN expression" << std::endl;
 }
