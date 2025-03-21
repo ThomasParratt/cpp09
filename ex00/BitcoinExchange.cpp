@@ -121,6 +121,7 @@ bool btc::isValidDate(std::string date)
     timeStruct.tm_mon = month - 1;    // Zero-based month (0 = Jan, 11 = Dec)
     timeStruct.tm_mday = day;
 
+    // comparing tm_mday ensures invalid days are caught
     if (std::mktime(&timeStruct) == -1 || timeStruct.tm_mday != day)
     {
         std::cout << "Error: Invalid day in date => " << date << std::endl;
