@@ -48,9 +48,9 @@ void RPN::parseInput()
             while (i < _input.size() && isdigit(_input[i]))
             {
                 num_str += _input[i];
-                i++;  // Move to the next character
+                i++;
             }
-            i--;  // Decrease i because the for loop will increment it after this iteration
+            i--;
 
             int num = std::stoi(num_str);
             values.push(num);
