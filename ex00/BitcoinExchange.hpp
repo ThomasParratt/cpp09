@@ -14,6 +14,7 @@ class btc
         btc();
         btc(const btc& obj);
         btc& operator=(const btc& obj);
+        ~btc();
         void    readData();
         void    printResults(std::string inputFile);
         bool    isValidDate(std::string date);

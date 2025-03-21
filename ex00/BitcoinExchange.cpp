@@ -5,10 +5,9 @@ btc::btc() : _data("data.csv")
     
 }
 
-btc::btc(const btc& obj)
+btc::btc(const btc& obj) : _data(obj._data), _dataMap(obj._dataMap)
 {
-    _data = obj._data;
-    _dataMap = obj._dataMap;
+
 }
 
 btc& btc::operator=(const btc& obj)
@@ -19,6 +18,11 @@ btc& btc::operator=(const btc& obj)
         _dataMap = obj._dataMap;
     }
     return (*this);
+}
+
+btc::~btc()
+{
+    
 }
 
 void    btc::readData()
