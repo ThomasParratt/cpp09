@@ -1,6 +1,6 @@
 #include "BitcoinExchange.hpp"
 
-btc::btc(std::string input, std::string data) : _input(input), _data(data)
+btc::btc() : _data("data.csv")
 {
 
 }
@@ -36,9 +36,9 @@ void    btc::readData()
     //     std::cout << it->first << " -> " << it->second << std::endl;
 }
 
-void    btc::printResults()
+void    btc::printResults(std::string inputFile)
 {
-    std::ifstream   input(_input);
+    std::ifstream   input(inputFile);
     std::string     date;
     float           value;
     std::string     line;

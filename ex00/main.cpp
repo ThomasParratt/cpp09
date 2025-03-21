@@ -7,9 +7,9 @@ int main(int argc, char **argv)
         std::cout << "Usage: ./btc <filename>" << std::endl;
         exit(1);
     }
-    btc bitcoin = btc(argv[1], "data.csv");
+    btc bitcoin;
     bitcoin.readData(); // add file into here as an argument and then use defaut contructor instead
-    bitcoin.printResults();
+    bitcoin.printResults(argv[1]);
 
     // std::cout << "Valid: " << bitcoin.isValidDate("2024-02-29") << std::endl; // Leap year case
     // std::cout << "Valid: " << bitcoin.isValidDate("2023-02-29") << std::endl; // Invalid non-leap year
