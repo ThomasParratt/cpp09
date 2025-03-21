@@ -130,15 +130,12 @@ bool btc::isValidDate(std::string date)
     return true;
 }
 
-float   btc::getResult(std::string date, float value)
+float btc::getResult(std::string date, float value)
 {
-    for (std::map<std::string, float>::iterator it = _dataMap.begin(); it != _dataMap.end(); ++it)
-    {
-        if (it->first > date)
-        {
-            it--;
-            return (value * it->second);
-        }
-    }
-    return (0);
+    auto it = _dataMap.lower_bound(date);
+    if (it != _dataMap.begin() && (it == _dataMap.end() || it->first != date))
+        --it;
+    if (it == _dataMap.end())
+        return (0);
+    return (value * it->second);
 }
