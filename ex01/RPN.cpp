@@ -1,10 +1,5 @@
 #include "RPN.hpp"
 
-RPN::RPN() : _input("")
-{
-
-}
-
 RPN::RPN(const RPN& obj)
 {
     *this = obj;
@@ -31,11 +26,6 @@ void RPN::parseInput()
 {
     std::stack<int> values;
     
-    if (_input.empty())
-    {
-        std::cerr << "Error: Missing input" << std::endl;
-        return ;
-    }
     for (size_t i = 0; i < _input.size(); i++)
     {
         char c = _input[i];
