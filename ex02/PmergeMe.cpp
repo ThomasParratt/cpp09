@@ -1,5 +1,10 @@
 #include "PmergeMe.hpp"
 
+PmergeMe::PmergeMe(const PmergeMe& obj) : _jacob(obj._jacob), _vec(obj._vec), _deq(obj._deq)
+{
+
+}
+
 PmergeMe::PmergeMe(int argc, char **argv) 
 {
     try 
@@ -27,6 +32,22 @@ PmergeMe::PmergeMe(int argc, char **argv)
         exit(1);
     }
     generateJacobsthal();
+}
+
+PmergeMe& PmergeMe::operator=(const PmergeMe& obj)
+{
+    if (this != &obj)
+    {
+        _jacob = obj._jacob;
+        _vec = obj._vec;
+        _deq = obj._deq;
+    }
+    return (*this);
+}
+        
+PmergeMe::~PmergeMe()
+{
+    
 }
 
 void PmergeMe::generateJacobsthal() 
