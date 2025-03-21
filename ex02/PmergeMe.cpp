@@ -47,7 +47,7 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& obj)
         
 PmergeMe::~PmergeMe()
 {
-    
+
 }
 
 void PmergeMe::generateJacobsthal() 
@@ -119,16 +119,16 @@ void PmergeMe::mergeInsertSortVector()
     if (_vec.size() % 2 != 0) 
         larger.push_back(_vec.back());
 
-                                                                                //printVec("Larger = ", larger);
-                                                                                //printVec("Smaller = ", smaller);
-                                                                                //std::cout << std::endl;
+    // printVec("Larger = ", larger);
+    // printVec("Smaller = ", smaller);
+    // std::cout << std::endl;
 
     // Recursive sort
     _vec = larger;
     mergeInsertSortVector();
 
-                                                                                //printVec("Sorted larger = ", _vec);
-                                                                                //printVec("Pending smaller elements = ", smaller);
+    //printVec("Sorted larger = ", _vec);
+    //printVec("Pending smaller elements = ", smaller);
 
     // Step 2: Insert pending elements using Jacobsthal sequence
     std::vector<bool> inserted(smaller.size(), false);
@@ -142,8 +142,8 @@ void PmergeMe::mergeInsertSortVector()
             continue;
         binaryInsertVec(_vec, smaller[idx]);
         inserted[idx] = true;
-                                                                                //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << smaller[idx] << ": ";
-                                                                                //printVec("", _vec);
+        //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << smaller[idx] << ": ";
+        //printVec("", _vec);
     }
 
     // Step 3: Insert any remaining pending elements not covered by Jacobsthal
@@ -152,11 +152,11 @@ void PmergeMe::mergeInsertSortVector()
         if (!inserted[i]) 
         {
             binaryInsertVec(_vec, smaller[i]);
-                                                                                //std::cout << "After inserting remaining " << smaller[i] << ": ";
-                                                                                //printVec("", _vec);
+            //std::cout << "After inserting remaining " << smaller[i] << ": ";
+            //printVec("", _vec);
         }
     }
-                                                                                //std::cout << std::endl;
+    //std::cout << std::endl;
 }
 
 void PmergeMe::mergeInsertSortDeque() 
