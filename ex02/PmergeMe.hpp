@@ -11,6 +11,7 @@ class PmergeMe
         std::vector<int>    _vec;
         std::deque<int>     _deq;
     public:
+        PmergeMe() = delete;
         PmergeMe(int argc, char **argv);
         void    generateJacobsthal();
         void    printVec(const std::string& label, const std::vector<int>& vec);
