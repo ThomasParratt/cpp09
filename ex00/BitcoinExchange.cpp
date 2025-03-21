@@ -2,7 +2,7 @@
 
 btc::btc() : _data("data.csv")
 {
-
+    
 }
 
 btc::btc(const btc& obj)
