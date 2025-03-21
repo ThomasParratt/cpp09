@@ -30,17 +30,29 @@ RPN::~RPN()
 void RPN::parseInput()
 {
     std::stack<int> values;
-
+    
     if (_input.empty())
     {
         std::cerr << "Error: Missing input" << std::endl;
         return ;
     }
-    for (char c : _input)
+    for (size_t i = 0; i < _input.size(); i++)
     {
+        char c = _input[i];
+            
         if (isdigit(c))
         {
-            int num = c - '0'; 
+            std::string num_str = "";
+            
+            // Collect the entire number
+            while (i < _input.size() && isdigit(_input[i]))
+            {
+                num_str += _input[i];
+                i++;  // Move to the next character
+            }
+            i--;  // Decrease i because the for loop will increment it after this iteration
+
+            int num = std::stoi(num_str);
             values.push(num);
         }
         else if (c == '+' || c == '-' || c == '*' || c == '/')
@@ -48,27 +60,21 @@ void RPN::parseInput()
             if (values.size() < 2)
             {
                 std::cerr << "Error: Not enough operands" << std::endl;
-                return ;
+                return;
             }
-
-            int b = values.top(); 
+    
+            int b = values.top();
             values.pop();
-            int a = values.top(); 
+            int a = values.top();
             values.pop();
             int result;
-
+    
             switch (c)
             {
-                case '+': 
-                    result = a + b; 
-                    break ;
-                case '-': 
-                    result = a - b; 
-                    break ;
-                case '*': 
-                    result = a * b;
-                    break ;
-                case '/': 
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/':
                     if (b == 0)
                     {
                         std::cerr << "Error: Division by zero" << std::endl;
@@ -79,13 +85,13 @@ void RPN::parseInput()
             }
             values.push(result);
         }
-        else if (c != ' ')
+        else if (c != ' ')  // Handle invalid characters
         {
             std::cerr << "Error: Invalid input" << std::endl;
             return ;
         }
     }
-
+    
     if (values.size() == 1)
         std::cout << values.top() << std::endl;
     else
