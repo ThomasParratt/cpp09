@@ -5,6 +5,22 @@ btc::btc() : _data("data.csv")
 
 }
 
+btc::btc(const btc& obj)
+{
+    _data = obj._data;
+    _dataMap = obj._dataMap;
+}
+
+btc& btc::operator=(const btc& obj)
+{
+    if (this != &obj)
+    {
+        _data = obj._data;
+        _dataMap = obj._dataMap;
+    }
+    return (*this);
+}
+
 void    btc::readData()
 {
     std::ifstream   input(_data);

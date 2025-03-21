@@ -8,7 +8,8 @@ int main(int argc, char **argv)
         exit(1);
     }
     btc bitcoin;
-    bitcoin.readData(); // add file into here as an argument and then use defaut contructor instead
+    
+    bitcoin.readData();
     bitcoin.printResults(argv[1]);
 
     // std::cout << "Valid: " << bitcoin.isValidDate("2024-02-29") << std::endl; // Leap year case
