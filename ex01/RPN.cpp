@@ -1,6 +1,28 @@
 #include "RPN.hpp"
 
+RPN::RPN()
+{
+
+}
+
+RPN::RPN(const RPN& obj)
+{
+    *this = obj;
+}
+
 RPN::RPN(std::string input) : _input(input)
+{
+
+}
+
+RPN& RPN::operator=(const RPN& obj)
+{
+    if (this != &obj)
+        *this = obj;
+    return (*this);
+}
+
+RPN::~RPN()
 {
 
 }
@@ -62,5 +84,5 @@ void RPN::parseInput()
     if (values.size() == 1)
         std::cout << values.top() << std::endl;
     else
-        std::cerr << "Error: Invalid RPN expression" << std::endl;
+        std::cerr << "Error: Invalid RPN expression or missing input" << std::endl;
 }
