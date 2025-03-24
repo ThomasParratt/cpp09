@@ -144,7 +144,7 @@ struct Pair
         size_t idx = _jacob[j];
         if (idx >= smaller.size()) 
             break ;
-        if (inserted[idx]) // Skip the double 1
+        if (inserted[idx])
             continue;
         binaryInsertVec(_vec, smaller[idx]);
         inserted[idx] = true;
