@@ -49,6 +49,7 @@ void RPN::parseInput()
             catch(const std::exception& e)
             {
                 std::cerr << "Error: Invalid argument" << std::endl;
+                return ;
             }
         }
         else if (c == '+' || c == '-' || c == '*' || c == '/')
