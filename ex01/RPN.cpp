@@ -26,31 +26,12 @@ void RPN::parseInput()
 {
     std::stack<int> values;
     
-    for (size_t i = 0; i < _input.size(); i++)
+    for (char c : _input)
     {
-        char c = _input[i];
-            
         if (isdigit(c))
         {
-            std::string num_str = "";
-            
-            // Collect the entire number
-            while (i < _input.size() && isdigit(_input[i]))
-            {
-                num_str += _input[i];
-                i++;
-            }
-            i--;
-            try
-            {
-                int num = std::stoi(num_str);
-                values.push(num);
-            }
-            catch(const std::exception& e)
-            {
-                std::cerr << "Error: Invalid argument" << std::endl;
-                return ;
-            }
+            int num = c - '0'; 
+            values.push(num);
         }
         else if (c == '+' || c == '-' || c == '*' || c == '/')
         {
@@ -84,7 +65,7 @@ void RPN::parseInput()
         }
         else if (c != ' ')  // Handle invalid characters
         {
-            std::cerr << "Error: Invalid input" << std::endl;
+            std::cerr << "Error: Invalid input characters" << std::endl;
             return ;
         }
     }
@@ -92,5 +73,5 @@ void RPN::parseInput()
     if (values.size() == 1)
         std::cout << values.top() << std::endl;
     else
-        std::cerr << "Error: Invalid RPN expression" << std::endl;
+        std::cerr << "Error: Invalid input" << std::endl;
 }
