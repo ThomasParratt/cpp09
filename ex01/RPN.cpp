@@ -41,9 +41,15 @@ void RPN::parseInput()
                 i++;
             }
             i--;
-
-            int num = std::stoi(num_str);
-            values.push(num);
+            try
+            {
+                int num = std::stoi(num_str);
+                values.push(num);
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << "Error: Invalid argument" << std::endl;
+            }
         }
         else if (c == '+' || c == '-' || c == '*' || c == '/')
         {
