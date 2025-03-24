@@ -90,7 +90,13 @@ void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value)
     sorted.insert(pos, value);
 }
 
-void PmergeMe::mergeInsertSortVector() 
+struct Pair 
+{
+    int smaller;
+    int larger;
+};
+
+/*void PmergeMe::mergeInsertSortVector() 
 {
     if (_vec.size() <= 1) 
         return ;
@@ -157,7 +163,108 @@ void PmergeMe::mergeInsertSortVector()
         }
     }
     //std::cout << std::endl;
+}*/
+
+void PmergeMe::mergeInsertSortVector() 
+{
+    if (_vec.size() <= 1)
+        return ;
+
+    // Step 1: Create (smaller, larger) pairs
+    std::vector<Pair> pairs;
+    std::cout << "---" << std::endl;
+    for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
+    {
+        int first = _vec[i];
+        int second = _vec[i + 1];
+        if (first > second) 
+        {
+            pairs.push_back({second, first});
+            std::cout << "  Pair " << i / 2 << ": (" << second << ", " << first << ")" << std::endl;
+        }
+        else 
+        {
+            pairs.push_back({first, second});
+            std::cout << "  Pair " << i / 2 << ": (" << first << ", " << second << ")" << std::endl;
+        }
+    }
+
+    // Handle unpaired last element
+    int unpaired = -1;
+    if (_vec.size() % 2 != 0) 
+    {
+        unpaired = _vec.back();
+        std::cout << "  Unpaired last element: " << unpaired << std::endl;
+    }
+
+    // Step 2: Recursively sort the 'larger' elements
+    std::vector<int> larger;
+    for (size_t i = 0; i < pairs.size(); ++i) 
+        larger.push_back(pairs[i].larger);
+
+    _vec = larger;
+    std::cout << "Recursively sorted 'larger' elements: ";
+    printVec("", _vec);
+    mergeInsertSortVector(); // Recursive sort
+
+    // Step 3: Insert the first 'smaller' value at the beginning of sorted
+    std::vector<int> sorted = _vec;
+    sorted.insert(sorted.begin(), pairs[0].smaller);
+    std::cout << "Inserted first 'smaller' (" << pairs[0].smaller << ") at the start." << std::endl;
+    printVec("Sorted so far: ", sorted);
+
+    // Step 4: Jacobsthal sequence insertions
+    std::vector<bool> inserted(pairs.size(), false);
+    inserted[0] = true;
+    std::cout << "=== " << std::endl;
+
+    for (size_t j = 0; j < _jacob.size(); ++j) 
+    {
+        size_t pairIdx = _jacob[j];
+        if (pairIdx >= pairs.size())
+            break ;
+        if (inserted[pairIdx])
+            continue ;
+
+        std::cout << "  Jacobsthal[" << j << "] = " << pairIdx << " -> Inserted smaller " 
+                  << pairs[pairIdx].smaller << " before larger " << pairs[pairIdx].larger << std::endl;
+
+        auto pos = std::lower_bound(sorted.begin(), sorted.end(), pairs[pairIdx].smaller);
+        sorted.insert(pos, pairs[pairIdx].smaller);
+        inserted[pairIdx] = true;
+        printVec("Sorted so far: ", sorted);
+    }
+
+    // Step 5: Insert remaining non-Jacobsthal smaller values
+    for (size_t i = 0; i < pairs.size(); ++i) 
+    {
+        if (!inserted[i]) 
+        {
+            std::cout << "Inserted remaining smaller " << pairs[i].smaller << " before larger " 
+                      << pairs[i].larger << std::endl;
+            auto pos = std::lower_bound(sorted.begin(), sorted.end(), pairs[i].smaller);
+            sorted.insert(pos, pairs[i].smaller);
+            printVec("Sorted so far: ", sorted);
+        }
+    }
+
+    // Step 6: Insert the unpaired element if exists
+    if (unpaired != -1) 
+    {
+        std::cout << "Inserted unpaired element " << unpaired << std::endl;
+        auto pos = std::lower_bound(sorted.begin(), sorted.end(), unpaired);
+        sorted.insert(pos, unpaired);
+    }
+
+    // Update the main vector
+    _vec = sorted;
+    std::cout << "Final sorted: ";
+    printVec("", _vec);
+    std::cout << "---" << std::endl;
 }
+
+
+//NEED CORRECT FOR DEQUE AND NEED TO UNDERSTAND
 
 void PmergeMe::mergeInsertSortDeque() 
 {
