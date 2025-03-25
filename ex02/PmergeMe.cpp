@@ -139,7 +139,7 @@ void PmergeMe::mergeInsertSortVector()
         if (idx >= smaller.size()) 
             break ;
         if (inserted[idx])
-            continue;
+            continue ;
         binaryInsertVec(_vec, smaller[idx]);
         inserted[idx] = true;
         //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << smaller[idx] << ": ";
