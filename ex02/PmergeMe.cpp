@@ -90,12 +90,6 @@ void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value)
     sorted.insert(pos, value);
 }
 
-struct Pair 
-{
-    int smaller;
-    int larger;
-};
-
 void PmergeMe::mergeInsertSortVector() 
 {
     if (_vec.size() <= 1) 
@@ -165,7 +159,6 @@ void PmergeMe::mergeInsertSortVector()
     //std::cout << std::endl;
 }
 
-//NEED CORRECT FOR DEQUE AND NEED TO UNDERSTAND
 
 void PmergeMe::mergeInsertSortDeque() 
 {
