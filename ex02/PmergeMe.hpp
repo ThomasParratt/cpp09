@@ -23,6 +23,6 @@ class PmergeMe
         void    binaryInsertDeq(std::deque<int>& sorted, int value);
         void    mergeInsertSortVector();
         void    mergeInsertSortDeque();
-        std::vector<int>    getVec();
-        std::deque<int>     getDeq();
+        std::vector<int>    getVec() const;
+        std::deque<int>     getDeq() const;
 };

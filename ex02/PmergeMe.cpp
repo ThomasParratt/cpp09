@@ -210,12 +210,12 @@ void PmergeMe::mergeInsertSortDeque()
     }
 }
 
-std::vector<int>   PmergeMe::getVec()
+std::vector<int>   PmergeMe::getVec() const
 {
     return (_vec);
 }
 
-std::deque<int>   PmergeMe::getDeq()
+std::deque<int>   PmergeMe::getDeq() const
 {
     return (_deq);
 }
