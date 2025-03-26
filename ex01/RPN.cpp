@@ -47,15 +47,40 @@ void RPN::parseInput()
             values.pop();
             int result;
     
-            switch (c)
-            {
-                case '+': result = a + b; break;
-                case '-': result = a - b; break;
-                case '*': result = a * b; break;
+            switch (c) {
+                case '+':
+                    if ((b > 0 && a > INT_MAX - b) || (b < 0 && a < INT_MIN - b)) 
+                    {
+                        std::cerr << "Error: Integer overflow on addition" << std::endl;
+                        return ;
+                    }
+                    result = a + b;
+                    break ;
+                case '-':
+                    if ((b < 0 && a > INT_MAX + b) || (b > 0 && a < INT_MIN + b)) 
+                    {
+                        std::cerr << "Error: Integer overflow on subtraction" << std::endl;
+                        return ;
+                    }
+                    result = a - b;
+                    break ;
+                case '*':
+                    if (a != 0 && (b > INT_MAX / a || b < INT_MIN / a)) 
+                    {
+                        std::cerr << "Error: Integer overflow on multiplication" << std::endl;
+                        return ;
+                    }
+                    result = a * b;
+                    break ;
                 case '/':
-                    if (b == 0)
+                    if (b == 0) 
                     {
                         std::cerr << "Error: Division by zero" << std::endl;
+                        return ; 
+                    }
+                    if (a == INT_MIN && b == -1) 
+                    {
+                        std::cerr << "Error: Integer overflow on division" << std::endl;
                         return ;
                     }
                     result = a / b;
