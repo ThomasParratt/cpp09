@@ -78,136 +78,173 @@ void PmergeMe::printDeq(const std::string& label, const std::deque<int>& deq)
     std::cout << std::endl;
 }
 
-void PmergeMe::binaryInsertVec(std::vector<int>& sorted, int value) 
+void PmergeMe::printVecPairs(const std::vector<std::pair<int,int>>& pairs)
 {
-    auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
+    std::cout << "Pairs: ";
+    for (auto pair : pairs)
+        std::cout << "{" << pair.first << "," << pair.second << "} ";
+    std::cout << std::endl;
+}
+
+void PmergeMe::printDeqPairs(const std::deque<std::pair<int,int>>& pairs)
+{
+    std::cout << "Pairs: ";
+    for (auto pair : pairs)
+        std::cout << "{" << pair.first << "," << pair.second << "} ";
+    std::cout << std::endl;
+}
+
+void PmergeMe::binaryInsertVec(std::vector<int>& sorted, int value, size_t idx) 
+{
+    auto pos = std::lower_bound(sorted.begin(), sorted.begin() + idx + 1, value);
     sorted.insert(pos, value);
 }
 
-void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value)
+void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value, size_t idx)
 {
-    auto pos = std::lower_bound(sorted.begin(), sorted.end(), value);
+    auto pos = std::lower_bound(sorted.begin(), sorted.begin() + idx + 1, value);
     sorted.insert(pos, value);
 }
 
-void PmergeMe::mergeInsertSortVector() 
+void PmergeMe::mergeInsertSortVector()
 {
     if (_vec.size() <= 1) 
         return ;
+    
+    //printVec("Vector = ", _vec);
 
-    // Step 1: Pairing and creating larger and smaller vectors
-    std::vector<int> larger;
-    std::vector<int> smaller;
+    bool    odd = false;
+    int     oddValue;     
 
-    for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
+    // Step 1: Creating pairs
+    std::vector<std::pair<int,int>> pairs;
+
+    for (size_t i = 0; i + 1 < _vec.size(); i += 2)
     {
         int first = _vec[i];
         int second = _vec[i + 1];
         if (first > second) 
-        {
-            larger.push_back(first);
-            smaller.push_back(second);
-        } 
+            pairs.emplace_back(second, first);
         else 
-        {
-            larger.push_back(second);
-            smaller.push_back(first);
-        }
+            pairs.emplace_back(first, second);
     }
 
-    // If odd, last element goes to larger
-    if (_vec.size() % 2 != 0) 
-        larger.push_back(_vec.back());
+    // If odd, last element goes to oddValue
+    if (_vec.size() % 2 != 0)
+    {
+        oddValue = _vec.back();
+        //std::cout << "Odd value = " << oddValue << std::endl;
+        odd = true;
+    }
 
-    // printVec("Larger = ", larger);
-    // printVec("Smaller = ", smaller);
-    // std::cout << std::endl;
+    //printVecPairs(pairs);
+    //std::cout << std::endl;
+
+    std::vector<int> larger;
+
+    for (auto pair : pairs)
+        larger.push_back(pair.second);
 
     // Recursive sort
     _vec = larger;
     mergeInsertSortVector();
 
     //printVec("Sorted larger = ", _vec);
-    //printVec("Pending smaller elements = ", smaller);
+    //printVecPairs(pairs);
 
     // Step 2: Insert pending elements using Jacobsthal sequence
-    std::vector<bool> inserted(smaller.size(), false);
+    std::vector<bool> inserted(pairs.size(), false);
 
     for (size_t j = 0; j < _jacob.size(); j++) 
     {
         size_t idx = _jacob[j];
-        if (idx >= smaller.size()) 
+        if (idx >= pairs.size())
             break ;
         if (inserted[idx])
             continue ;
-        binaryInsertVec(_vec, smaller[idx]);
+        binaryInsertVec(_vec, pairs[idx].first, idx);
         inserted[idx] = true;
-        //std::cout << "After inserting (Jacobsthal " << _jacob[j] << ") " << smaller[idx] << ": ";
+        //std::cout << "After inserting smaller (Jacobsthal " << _jacob[j] << ") " << pairs[idx].first << ": ";
         //printVec("", _vec);
     }
 
     // Step 3: Insert any remaining pending elements not covered by Jacobsthal
-    for (size_t i = 0; i < smaller.size(); i++) 
+    for (size_t i = 0; i < pairs.size(); i++) 
     {
         if (!inserted[i]) 
         {
-            binaryInsertVec(_vec, smaller[i]);
-            //std::cout << "After inserting remaining " << smaller[i] << ": ";
+            binaryInsertVec(_vec, pairs[i].first, i);
+            //std::cout << "After inserting smaller remaining " << pairs[i].first << ": ";
             //printVec("", _vec);
         }
+    }
+    if (odd)
+    {
+        binaryInsertVec(_vec, oddValue, _vec.size());
+        //std::cout << "After inserting odd value " << oddValue << ": ";
     }
     //std::cout << std::endl;
 }
 
-
-void PmergeMe::mergeInsertSortDeque() 
+void PmergeMe::mergeInsertSortDeque()
 {
     if (_deq.size() <= 1) 
         return ;
 
-    std::deque<int> larger;
-    std::deque<int> smaller;
+    bool    odd = false;
+    int     oddValue;     
 
-    for (size_t i = 0; i + 1 < _deq.size(); i += 2) 
+    // Step 1: Creating pairs
+    std::deque<std::pair<int,int>> pairs;
+
+    for (size_t i = 0; i + 1 < _deq.size(); i += 2)
     {
         int first = _deq[i];
         int second = _deq[i + 1];
         if (first > second) 
-        {
-            larger.push_back(first);
-            smaller.push_back(second);
-        } 
+            pairs.emplace_back(second, first);
         else 
-        {
-            larger.push_back(second);
-            smaller.push_back(first);
-        }
+            pairs.emplace_back(first, second);
     }
 
-    if (_deq.size() % 2 != 0) 
-        larger.push_back(_deq.back());
+    // If odd, last element goes to oddValue
+    if (_deq.size() % 2 != 0)
+    {
+        oddValue = _deq.back();
+        odd = true;
+    }
 
+    std::deque<int> larger;
+
+    for (auto pair : pairs)
+        larger.push_back(pair.second);
+
+    // Recursive sort
     _deq = larger;
     mergeInsertSortDeque();
 
-    std::deque<bool> inserted(smaller.size(), false);
+    // Step 2: Insert pending elements using Jacobsthal sequence
+    std::deque<bool> inserted(pairs.size(), false);
 
     for (size_t j = 0; j < _jacob.size(); j++) 
     {
         size_t idx = _jacob[j];
-        if (idx >= smaller.size()) 
+        if (idx >= pairs.size())
             break ;
         if (inserted[idx])
-            continue;
-        binaryInsertDeq(_deq, smaller[idx]);
+            continue ;
+        binaryInsertDeq(_deq, pairs[idx].first, idx);
         inserted[idx] = true;
     }
 
-    for (size_t i = 0; i < smaller.size(); i++) 
+    // Step 3: Insert any remaining pending elements not covered by Jacobsthal
+    for (size_t i = 0; i < pairs.size(); i++) 
     {
         if (!inserted[i]) 
-            binaryInsertDeq(_deq, smaller[i]);
+            binaryInsertDeq(_deq, pairs[i].first, i);
     }
+    if (odd)
+        binaryInsertDeq(_deq, oddValue, _deq.size());
 }
 
 std::vector<int>   PmergeMe::getVec() const
