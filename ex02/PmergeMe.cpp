@@ -173,7 +173,7 @@ void PmergeMe::mergeInsertSortVector()
     {
         if (!inserted[i]) 
         {
-            binaryInsertVec(_vec, pairs[i].first, i);
+            binaryInsertVec(_vec, pairs[i].first, _vec.size());
             //std::cout << "After inserting smaller remaining " << pairs[i].first << ": ";
             //printVec("", _vec);
         }
@@ -182,6 +182,7 @@ void PmergeMe::mergeInsertSortVector()
     {
         binaryInsertVec(_vec, oddValue, _vec.size());
         //std::cout << "After inserting odd value " << oddValue << ": ";
+        //printVec("", _vec);
     }
     //std::cout << std::endl;
 }
