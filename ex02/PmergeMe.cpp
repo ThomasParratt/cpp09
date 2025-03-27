@@ -78,21 +78,21 @@ void PmergeMe::printDeq(const std::string& label, const std::deque<int>& deq)
     std::cout << std::endl;
 }
 
-// void PmergeMe::printVecPairs(const std::vector<std::pair<int,int>>& pairs)
-// {
-//     std::cout << "Pairs: ";
-//     for (auto pair : pairs)
-//         std::cout << "{" << pair.first << "," << pair.second << "} ";
-//     std::cout << std::endl;
-// }
+void PmergeMe::printVecPairs(const std::vector<std::pair<int,int>>& pairs)
+{
+    std::cout << "Pairs: ";
+    for (auto pair : pairs)
+        std::cout << "{" << pair.first << "," << pair.second << "} ";
+    std::cout << std::endl;
+}
 
-// void PmergeMe::printDeqPairs(const std::deque<std::pair<int,int>>& pairs)
-// {
-//     std::cout << "Pairs: ";
-//     for (auto pair : pairs)
-//         std::cout << "{" << pair.first << "," << pair.second << "} ";
-//     std::cout << std::endl;
-// }
+void PmergeMe::printDeqPairs(const std::deque<std::pair<int,int>>& pairs)
+{
+    std::cout << "Pairs: ";
+    for (auto pair : pairs)
+        std::cout << "{" << pair.first << "," << pair.second << "} ";
+    std::cout << std::endl;
+}
 
 void PmergeMe::binaryInsertVec(std::vector<int>& sorted, int value, size_t idx) 
 {
@@ -119,16 +119,18 @@ void PmergeMe::mergeInsertSortVector()
     // Step 1: Creating pairs
     std::vector<std::pair<int,int>> pairs;
     std::vector<int> larger;
+    std::vector<size_t> indices;
 
-    for (size_t i = 0; i + 1 < _vec.size(); i += 2)
+    // Handle even-sized collection
+    for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
     {
-        int first = _vec[i];
-        int second = _vec[i + 1];
-        if (first > second) 
-            pairs.emplace_back(second, first);
-        else 
-            pairs.emplace_back(first, second);
-        larger.push_back(pairs[i/2].second);
+        int a = _vec[i];
+        int b = _vec[i + 1];
+        
+        // Pair with smaller element first, larger second
+        pairs.emplace_back(std::min(a, b), std::max(a, b));
+        larger.push_back(std::max(a, b));
+        indices.push_back(i/2);
     }
 
     // If odd, last element goes to oddValue
@@ -145,23 +147,11 @@ void PmergeMe::mergeInsertSortVector()
     _vec = larger;
     mergeInsertSortVector();
 
+    // Reconstruct pairs based on sorted larger elements
     std::vector<std::pair<int,int>> sortedPairs;
-
-    // Match the sorted larger elements to their original pairs
-    for (int num : _vec)  
-    {
-        for (size_t i = 0; i < pairs.size(); i++)  
-        {
-            if (pairs[i].second == num)  
-            {
-                sortedPairs.push_back(pairs[i]);
-                pairs.erase(pairs.begin() + i);  // Remove used pair
-                break;
-            }
-        }
-    }
-
-    pairs = sortedPairs;  // Now pairs are in the same order as _vec
+    for (size_t idx : indices)
+        sortedPairs.push_back(pairs[idx]);
+    pairs = sortedPairs;
 
     // printVec("Sorted larger = ", _vec);
     // std::cout << "Sorted ";
@@ -206,6 +196,8 @@ void PmergeMe::mergeInsertSortDeque()
 {
     if (_deq.size() <= 1) 
         return ;
+    
+    //printDeq("Deque = ", _deq);
 
     bool    odd = false;
     int     oddValue;     
@@ -213,16 +205,18 @@ void PmergeMe::mergeInsertSortDeque()
     // Step 1: Creating pairs
     std::deque<std::pair<int,int>> pairs;
     std::deque<int> larger;
+    std::deque<size_t> indices;
 
-    for (size_t i = 0; i + 1 < _deq.size(); i += 2)
+    // Handle even-sized collection
+    for (size_t i = 0; i + 1 < _deq.size(); i += 2) 
     {
-        int first = _deq[i];
-        int second = _deq[i + 1];
-        if (first > second) 
-            pairs.emplace_back(second, first);
-        else 
-            pairs.emplace_back(first, second);
-        larger.push_back(pairs[i/2].second);
+        int a = _deq[i];
+        int b = _deq[i + 1];
+        
+        // Pair with smaller element first, larger second
+        pairs.emplace_back(std::min(a, b), std::max(a, b));
+        larger.push_back(std::max(a, b));
+        indices.push_back(i/2);
     }
 
     // If odd, last element goes to oddValue
@@ -232,27 +226,22 @@ void PmergeMe::mergeInsertSortDeque()
         odd = true;
     }
 
+    // printDeqPairs(pairs);
+    // std::cout << std::endl;
+
     // Recursive sort
     _deq = larger;
     mergeInsertSortDeque();
 
+     // Reconstruct pairs based on sorted larger elements
     std::deque<std::pair<int,int>> sortedPairs;
+    for (size_t idx : indices)
+        sortedPairs.push_back(pairs[idx]);
+    pairs = sortedPairs;
 
-    // Match the sorted larger elements to their original pairs
-    for (int num : _deq)  
-    {
-        for (size_t i = 0; i < pairs.size(); i++)  
-        {
-            if (pairs[i].second == num)  
-            {
-                sortedPairs.push_back(pairs[i]);
-                pairs.erase(pairs.begin() + i);  // Remove used pair
-                break ;
-            }
-        }
-    }
-
-    pairs = sortedPairs;  // Now pairs are in the same order as _deq
+    // printDeq("Sorted larger = ", _deq);
+    // std::cout << "Sorted ";
+    // printDeqPairs(pairs);
 
     // Step 2: Insert pending elements using Jacobsthal sequence
     std::deque<bool> inserted(pairs.size(), false);
@@ -266,16 +255,27 @@ void PmergeMe::mergeInsertSortDeque()
             continue ;
         binaryInsertDeq(_deq, pairs[idx].first, idx);
         inserted[idx] = true;
+        // std::cout << "After inserting smaller (Jacobsthal " << _jacob[j] << ") " << pairs[idx].first << ": ";
+        // printDeq("", _deq);
     }
 
     // Step 3: Insert any remaining pending elements not covered by Jacobsthal
     for (size_t i = 0; i < pairs.size(); i++) 
     {
         if (!inserted[i]) 
+        {
             binaryInsertDeq(_deq, pairs[i].first, _deq.size());
+            // std::cout << "After inserting smaller remaining " << pairs[i].first << ": ";
+            // printDeq("", _deq);
+        }
     }
     if (odd)
+    {
         binaryInsertDeq(_deq, oddValue, _deq.size());
+        // std::cout << "After inserting odd value " << oddValue << ": ";
+        // printDeq("", _deq);
+    }
+    //std::cout << std::endl;
 }
 
 std::vector<int>   PmergeMe::getVec() const
