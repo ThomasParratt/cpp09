@@ -93,7 +93,8 @@ void PmergeMe::printDeqPairs(const std::deque<std::pair<int,int>>& pairs)
     std::cout << std::endl;
 }
 
-void PmergeMe::binaryInsertVec(std::vector<int>& arr, int value) {
+void PmergeMe::binaryInsertVec(std::vector<int>& arr, int value) 
+{
     auto pos = std::lower_bound(arr.begin(), arr.end(), value);
     arr.insert(pos, value);
 }
@@ -104,84 +105,98 @@ void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value, size_t idx)
     sorted.insert(pos, value);
 }
 
-void PmergeMe::mergeSortedBlocks(std::vector<int>& arr) {
+void PmergeMe::mergeSortedBlocks(std::vector<int>& arr) 
+{
     size_t n = arr.size();
     std::vector<int> temp(arr.size());
-    for (size_t blockSize = 2; blockSize / 2 < n; blockSize *= 2) {
-        for (size_t i = 0; i < n; i += blockSize) {
+    for (size_t blockSize = 2; blockSize / 2 < n; blockSize *= 2) 
+    {
+        for (size_t i = 0; i < n; i += blockSize) 
+        {
             size_t mid = std::min(i + blockSize / 2, n);
             size_t end = std::min(i + blockSize, n);
             size_t left = i, right = mid, idx = i;
 
-            while (left < mid && right < end) {
-                if (arr[left] < arr[right]) {
+            while (left < mid && right < end) 
+            {
+                if (arr[left] < arr[right])
                     temp[idx++] = arr[left++];
-                } else {
+                else
                     temp[idx++] = arr[right++];
-                }
             }
-            while (left < mid) temp[idx++] = arr[left++];
-            while (right < end) temp[idx++] = arr[right++];
+            while (left < mid) 
+                temp[idx++] = arr[left++];
+            while (right < end) 
+                temp[idx++] = arr[right++];
 
-            for (size_t j = i; j < end; j++) {
+            for (size_t j = i; j < end; j++)
                 arr[j] = temp[j];
-            }
         }
     }
 }
 
-void PmergeMe::mergeInsertSortVector() {
-    if (_vec.size() <= 1) return;
+void PmergeMe::mergeInsertSortVector() \
+{
+    printVec("vec = ", _vec);
+    if (_vec.size() <= 1) 
+        return ;
 
     bool odd = false;
     int oddValue;
     std::vector<std::pair<int, int>> pairs;
     std::vector<int> larger;
 
-    for (size_t i = 0; i + 1 < _vec.size(); i += 2) {
+    for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
+    {
         int a = _vec[i], b = _vec[i + 1];
         if (a > b) std::swap(a, b);
         pairs.emplace_back(a, b);
         larger.push_back(b);
     }
 
-    if (_vec.size() % 2 != 0) {
+    if (_vec.size() % 2 != 0) 
+    {
         odd = true;
         oddValue = _vec.back();
     }
+    printVecPairs(pairs);
 
     _vec = larger;
     mergeInsertSortVector();
-
+    printVec("larger = ", _vec);
     std::vector<int> sortedLarger = _vec;
-    mergeSortedBlocks(sortedLarger);
+    //mergeSortedBlocks(sortedLarger); // THIS DOESN"T SEEM TO BE NEEDED?
+    printVec("larger after merge = ", _vec);
 
     std::vector<int> pendingInsertion;
-    for (const auto& p : pairs) {
+    for (const auto& p : pairs) 
         pendingInsertion.push_back(p.first);
-    }
+    
+    printVec("pending smaller = ", _vec);
 
     generateJacobsthal();
 
     std::vector<bool> inserted(pendingInsertion.size(), false);
-    for (size_t j = 0; j < _jacob.size(); j++) {
+    for (size_t j = 0; j < _jacob.size(); j++) 
+    {
         size_t idx = _jacob[j];
-        if (idx >= pendingInsertion.size()) break;
-        if (!inserted[idx]) {
+        if (idx >= pendingInsertion.size()) 
+            break ;
+        if (!inserted[idx]) 
+        {
             binaryInsertVec(sortedLarger, pendingInsertion[idx]);
             inserted[idx] = true;
         }
     }
 
-    for (size_t i = 0; i < pendingInsertion.size(); i++) {
-        if (!inserted[i]) {
+    for (size_t i = 0; i < pendingInsertion.size(); i++) 
+    {
+        if (!inserted[i])
             binaryInsertVec(sortedLarger, pendingInsertion[i]);
-        }
     }
 
-    if (odd) {
+    if (odd)
         binaryInsertVec(sortedLarger, oddValue);
-    }
 
     _vec = sortedLarger;
 }
