@@ -3,11 +3,12 @@
 #include <vector>
 #include <deque>
 #include <chrono>
+#include <algorithm>
 
 class PmergeMe
 {
     private:
-        std::vector<size_t> _jacob;
+        std::vector<int> _jacob;
         std::vector<int>    _vec;
         std::deque<int>     _deq;
     public:
@@ -21,8 +22,9 @@ class PmergeMe
         void    printDeq(const std::string& label, const std::deque<int>& deq);
         void    printVecPairs(const std::vector<std::pair<int,int>>& pairs);
         void    printDeqPairs(const std::deque<std::pair<int,int>>& pairs);
-        void    binaryInsertVec(std::vector<int>& sorted, int value, size_t idx);
+        void    binaryInsertVec(std::vector<int>& arr, int value);
         void    binaryInsertDeq(std::deque<int>& sorted, int value, size_t idx);
+        void    mergeSortedBlocks(std::vector<int>& arr);
         void    mergeInsertSortVector();
         void    mergeInsertSortDeque();
         std::vector<int>    getVec() const;

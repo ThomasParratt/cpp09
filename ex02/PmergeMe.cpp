@@ -31,7 +31,6 @@ PmergeMe::PmergeMe(int argc, char **argv)
         std::cerr << "Error: Cannot sort one number" << std::endl;
         exit(1);
     }
-    generateJacobsthal();
 }
 
 PmergeMe& PmergeMe::operator=(const PmergeMe& obj)
@@ -52,13 +51,13 @@ PmergeMe::~PmergeMe()
 
 void PmergeMe::generateJacobsthal() 
 {
-    _jacob.push_back(0);
     _jacob.push_back(1);
-    unsigned int i = 2;
-    while (_jacob.back() < _vec.size()) 
-    {
-        _jacob.push_back(_jacob[i - 1] + 2 * _jacob[i - 2]);
-        i++;
+    _jacob.push_back(2);
+
+    // Generate the sequence until it covers the necessary size
+    while (_jacob.back() <= _vec.size()) {
+        size_t nextValue = 2 * _jacob.back() + _jacob[_jacob.size() - 2];
+        _jacob.push_back(nextValue);
     }
 }
 
@@ -94,10 +93,9 @@ void PmergeMe::printDeqPairs(const std::deque<std::pair<int,int>>& pairs)
     std::cout << std::endl;
 }
 
-void PmergeMe::binaryInsertVec(std::vector<int>& sorted, int value, size_t idx) 
-{
-    auto pos = std::lower_bound(sorted.begin(), sorted.begin() + idx + 1, value);
-    sorted.insert(pos, value);
+void PmergeMe::binaryInsertVec(std::vector<int>& arr, int value) {
+    auto pos = std::lower_bound(arr.begin(), arr.end(), value);
+    arr.insert(pos, value);
 }
 
 void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value, size_t idx)
@@ -106,90 +104,86 @@ void PmergeMe::binaryInsertDeq(std::deque<int>& sorted, int value, size_t idx)
     sorted.insert(pos, value);
 }
 
-void PmergeMe::mergeInsertSortVector()
-{
-    if (_vec.size() <= 1) 
-        return ;
-    
-    //printVec("Vector = ", _vec);
+void PmergeMe::mergeSortedBlocks(std::vector<int>& arr) {
+    size_t n = arr.size();
+    std::vector<int> temp(arr.size());
+    for (size_t blockSize = 2; blockSize / 2 < n; blockSize *= 2) {
+        for (size_t i = 0; i < n; i += blockSize) {
+            size_t mid = std::min(i + blockSize / 2, n);
+            size_t end = std::min(i + blockSize, n);
+            size_t left = i, right = mid, idx = i;
 
-    bool    odd = false;
-    int     oddValue;     
+            while (left < mid && right < end) {
+                if (arr[left] < arr[right]) {
+                    temp[idx++] = arr[left++];
+                } else {
+                    temp[idx++] = arr[right++];
+                }
+            }
+            while (left < mid) temp[idx++] = arr[left++];
+            while (right < end) temp[idx++] = arr[right++];
 
-    // Step 1: Creating pairs
-    std::vector<std::pair<int,int>> pairs;
+            for (size_t j = i; j < end; j++) {
+                arr[j] = temp[j];
+            }
+        }
+    }
+}
+
+void PmergeMe::mergeInsertSortVector() {
+    if (_vec.size() <= 1) return;
+
+    bool odd = false;
+    int oddValue;
+    std::vector<std::pair<int, int>> pairs;
     std::vector<int> larger;
-    std::vector<size_t> indices;
 
-    // Handle even-sized collection
-    for (size_t i = 0; i + 1 < _vec.size(); i += 2) 
-    {
-        int a = _vec[i];
-        int b = _vec[i + 1];
-        
-        // Pair with smaller element first, larger second
-        pairs.emplace_back(std::min(a, b), std::max(a, b));
-        larger.push_back(std::max(a, b));
-        indices.push_back(i/2);
+    for (size_t i = 0; i + 1 < _vec.size(); i += 2) {
+        int a = _vec[i], b = _vec[i + 1];
+        if (a > b) std::swap(a, b);
+        pairs.emplace_back(a, b);
+        larger.push_back(b);
     }
 
-    // If odd, last element goes to oddValue
-    if (_vec.size() % 2 != 0)
-    {
-        oddValue = _vec.back();
+    if (_vec.size() % 2 != 0) {
         odd = true;
+        oddValue = _vec.back();
     }
 
-    // printVecPairs(pairs);
-    // std::cout << std::endl;
-
-    // Recursive sort
     _vec = larger;
     mergeInsertSortVector();
 
-    // Reconstruct pairs based on sorted larger elements
-    std::vector<std::pair<int,int>> sortedPairs;
-    for (size_t idx : indices)
-        sortedPairs.push_back(pairs[idx]);
-    pairs = sortedPairs;
+    std::vector<int> sortedLarger = _vec;
+    mergeSortedBlocks(sortedLarger);
 
-    // printVec("Sorted larger = ", _vec);
-    // std::cout << "Sorted ";
-    // printVecPairs(pairs);
-
-    // Step 2: Insert pending elements using Jacobsthal sequence
-    std::vector<bool> inserted(pairs.size(), false);
-
-    for (size_t j = 0; j < _jacob.size(); j++) 
-    {
-        size_t idx = _jacob[j];
-        if (idx >= pairs.size())
-            break ;
-        if (inserted[idx])
-            continue ;
-        binaryInsertVec(_vec, pairs[idx].first, idx);
-        inserted[idx] = true;
-        // std::cout << "After inserting smaller (Jacobsthal " << _jacob[j] << ") " << pairs[idx].first << ": ";
-        // printVec("", _vec);
+    std::vector<int> pendingInsertion;
+    for (const auto& p : pairs) {
+        pendingInsertion.push_back(p.first);
     }
 
-    // Step 3: Insert any remaining pending elements not covered by Jacobsthal
-    for (size_t i = 0; i < pairs.size(); i++) 
-    {
-        if (!inserted[i]) 
-        {
-            binaryInsertVec(_vec, pairs[i].first, _vec.size());
-            // std::cout << "After inserting smaller remaining " << pairs[i].first << ": ";
-            // printVec("", _vec);
+    generateJacobsthal();
+
+    std::vector<bool> inserted(pendingInsertion.size(), false);
+    for (size_t j = 0; j < _jacob.size(); j++) {
+        size_t idx = _jacob[j];
+        if (idx >= pendingInsertion.size()) break;
+        if (!inserted[idx]) {
+            binaryInsertVec(sortedLarger, pendingInsertion[idx]);
+            inserted[idx] = true;
         }
     }
-    if (odd)
-    {
-        binaryInsertVec(_vec, oddValue, _vec.size());
-        // std::cout << "After inserting odd value " << oddValue << ": ";
-        // printVec("", _vec);
+
+    for (size_t i = 0; i < pendingInsertion.size(); i++) {
+        if (!inserted[i]) {
+            binaryInsertVec(sortedLarger, pendingInsertion[i]);
+        }
     }
-    //std::cout << std::endl;
+
+    if (odd) {
+        binaryInsertVec(sortedLarger, oddValue);
+    }
+
+    _vec = sortedLarger;
 }
 
 void PmergeMe::mergeInsertSortDeque()
