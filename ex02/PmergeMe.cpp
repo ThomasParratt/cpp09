@@ -111,6 +111,8 @@ void PmergeMe::mergeSortedBlocks(std::vector<int>& arr)
     std::vector<int> temp(arr.size());
     for (size_t blockSize = 2; blockSize / 2 < n; blockSize *= 2) 
     {
+        std::cout << "Block size = " << blockSize << std::endl;
+        printVec("arr = ", arr);
         for (size_t i = 0; i < n; i += blockSize) 
         {
             size_t mid = std::min(i + blockSize / 2, n);
@@ -162,17 +164,17 @@ void PmergeMe::mergeInsertSortVector() \
     printVecPairs(pairs);
 
     _vec = larger;
-    mergeInsertSortVector();
+    //mergeInsertSortVector();
     printVec("larger = ", _vec);
     std::vector<int> sortedLarger = _vec;
-    //mergeSortedBlocks(sortedLarger); // THIS DOESN"T SEEM TO BE NEEDED?
-    printVec("larger after merge = ", _vec);
+    mergeSortedBlocks(sortedLarger); // THIS DOESN"T SEEM TO BE NEEDED?
+    printVec("larger after merge = ", sortedLarger);
 
     std::vector<int> pendingInsertion;
     for (const auto& p : pairs) 
         pendingInsertion.push_back(p.first);
     
-    printVec("pending smaller = ", _vec);
+    printVec("pending smaller = ", pendingInsertion);
 
     generateJacobsthal();
 
