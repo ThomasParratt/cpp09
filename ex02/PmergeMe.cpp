@@ -251,7 +251,8 @@ void PmergeMe::fordJohnsonSort()
     {
         int a = _vec[i];
         int b = _vec[i + 1];
-        if (a > b) std::swap(a, b);
+        if (a > b) 
+            std::swap(a, b);
         pairs.push_back({a, b});
     }
 
@@ -274,18 +275,24 @@ void PmergeMe::fordJohnsonSort()
     printVec("mainChain = ", mainChain);
     printVec("pendingChain = ", pendingChain);
 
-    std::vector<size_t> jacobsthal = generateJacobsthal_1(pendingChain.size());
+    std::vector<int> jacobsthal = generateJacobsthal_1(pendingChain.size());
+    printVec("jacobsthal = ", jacobsthal);
+
+    binaryInsert(mainChain, pendingChain[0], 0, mainChain.size());
 
     // Step 3: Insert elements from the pending chain into the main chain using Jacobsthal sequence
     size_t prevJacob = 1;  // We start with the Jacobsthal number 1
     for (size_t idx : jacobsthal) 
     {
+        std::cout << "idx = " << idx << std::endl;
         if (idx > pendingChain.size() - 1) 
             break ;
 
         // Insert the current b# element (pendingChain[idx]) into the mainChain
         size_t insertPos = std::find(mainChain.begin(), mainChain.end(), pairs[idx].second) - mainChain.begin();
+        std::cout << "Inserting " << pendingChain[idx] << std::endl;
         binaryInsert(mainChain, pendingChain[idx], 0, insertPos);
+        printVec("mainChain = ", mainChain);
 
         // Find out how many elements to insert based on the Jacobsthal difference
         size_t numInsert = idx - prevJacob;
@@ -294,7 +301,9 @@ void PmergeMe::fordJohnsonSort()
             if (prevJacob + i < pendingChain.size()) 
             {
                 size_t insertPos = std::find(mainChain.begin(), mainChain.end(), pairs[prevJacob + i].second) - mainChain.begin();
+                std::cout << "INSERTING " << pendingChain[prevJacob + i] << std::endl;
                 binaryInsert(mainChain, pendingChain[prevJacob + i], 0, insertPos);
+                printVec("mainChain = ", mainChain);
             }
         }
 
@@ -303,19 +312,23 @@ void PmergeMe::fordJohnsonSort()
 
     // Step 4: Insert the odd element if there was one
     if (hasOdd)
+    {
+        std::cout << "Inserting odd " << oddValue << std::endl;
         binaryInsert(mainChain, oddValue, 0, mainChain.size());
+        printVec("mainChain = ", mainChain);
+    }
 
     // Final sorted array
     _vec = mainChain;
 }
 
 // Generate Jacobsthal sequence for the required size
-std::vector<size_t> PmergeMe::generateJacobsthal_1(size_t n) {
-    std::vector<size_t> jacobsthal;
+std::vector<int> PmergeMe::generateJacobsthal_1(int n) {
+    std::vector<int> jacobsthal;
     jacobsthal.push_back(1);  // Jacobsthal(1)
     jacobsthal.push_back(3);  // Jacobsthal(2)
 
-    for (size_t i = 2; i < n; ++i) {
+    for (int i = 2; i < n; ++i) {
         jacobsthal.push_back(jacobsthal[i - 1] + 2 * jacobsthal[i - 2]);
     }
 

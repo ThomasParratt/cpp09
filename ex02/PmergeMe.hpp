@@ -30,7 +30,7 @@ class PmergeMe
 
         void    fordJohnsonSort();
         void    binaryInsert(std::vector<int>& vec, int value, size_t left, size_t right);
-        std::vector<size_t>    generateJacobsthal_1(size_t n);
+        std::vector<int>    generateJacobsthal_1(int n);
 
         void    mergeInsertSortDeque();
         std::vector<int>    getVec() const;
