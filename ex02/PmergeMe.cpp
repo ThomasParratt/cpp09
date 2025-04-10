@@ -166,17 +166,17 @@ void PmergeMe::printDeqPairs(const std::deque<std::pair<int,int>>& pairs)
 
 std::vector<size_t>	PmergeMe::generateJacobsthal(size_t pairSize)
 {
-	std::vector<size_t>	seq;			//sequence (1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461...)
-	size_t				latestNumber;	// i.e.	latest sequence number
+	std::vector<size_t>	seq;
+	size_t				num;
 
 	seq.push_back(1);
 	seq.push_back(3);
 
-	latestNumber = 3;
-	for(int i = 2; latestNumber < pairSize; i++)
+	num = 3;
+	for(int i = 2; num < pairSize; i++)
 	{
-		latestNumber = seq[i - 1] + 2 * seq[i - 2]; // n = (n-1) +  2 * (n - 2)
-		seq.push_back(latestNumber);
+		num = seq[i - 1] + 2 * seq[i - 2];
+		seq.push_back(num);
 	}
 	return (seq);
 }
@@ -191,7 +191,6 @@ size_t	PmergeMe::findPartner(size_t a, std::vector<std::pair<int, int>>& pairs)
 			return (p.first);
 		}
 	}
-	//std::cerr <<  "Error: Did not find pair value" << std::endl;
 	return (0);
 }
 
@@ -201,8 +200,7 @@ void	PmergeMe::insertion(std::vector<int>& main, std::vector<std::pair<int, int>
 
 	jacobSeq = generateJacobsthal(pairs.size());
 
-	std::vector<int> mainCopy = main;		//Used for original index (i.e. main will be inserted, thus changes)
-
+	std::vector<int> mainBeforeInsertion = main;
 
 	size_t value = findPartner(main[0], pairs);	//Find b1
     std::cout << "Inserting " << value << " to front" << std::endl;
@@ -212,22 +210,22 @@ void	PmergeMe::insertion(std::vector<int>& main, std::vector<std::pair<int, int>
 	if (pairs.size() == 1)						//All values added from pairs.
 		return ;
 
-	for (size_t i = 1; i < jacobSeq.size(); i++)	//Loop through Jacobsthal sequence
+	for (size_t i = 1; i < jacobSeq.size(); i++)
 	{
-		size_t	upper	= jacobSeq[i];			// Current Jacobsthal number	(f.ex. 3)
-		size_t	lower	= jacobSeq[i-1];		// Previous Jacobsthal number	(f.ex. 1)
+		size_t curr = jacobSeq[i];
+		size_t prev = jacobSeq[i-1];
 
 
-		for (size_t index = upper; index != lower; index--)	// Going reverse order (f.ex. 3, 2 OR 5, 4 OR 11, 10, 9, 8, 7, 6 OR etc)
+		for (size_t i = curr; i != prev; i--)	// Going reverse order (f.ex. 3, 2 OR 5, 4 OR 11, 10, 9, 8, 7, 6 OR etc)
 		{
-            //printVec("main = ", main);
-            //printVec("main copy = ", mainCopy);
-            std::cout << "Index = " << index << std::endl;
-			if (index > pairs.size()) // Checks if index out of bounds
+            printVec("main = ", main);
+            printVec("main copy = ", mainBeforeInsertion);
+            std::cout << "Index = " << i << std::endl;
+			if (i > pairs.size()) // Checks if index out of bounds
 				continue ;
 
 			// Find Corresponding b value
-			size_t value = findPartner(mainCopy[index - 1], pairs); 			// -1 for offset f.ex. main[1-1] -> a1 -> b1; main[2-1] -> a2 -> b2;
+			size_t value = findPartner(mainBeforeInsertion[i - 1], pairs);
 			
 			// Find Position to insert
 			auto pos = std::lower_bound(main.begin(), main.end(), value); 
