@@ -1,14 +1,8 @@
 #include "BitcoinExchange.hpp"
 
-btc::btc() : _data("data.csv")
-{
-    
-}
+btc::btc() : _data("data.csv"){}
 
-btc::btc(const btc& obj) : _data(obj._data), _dataMap(obj._dataMap)
-{
-
-}
+btc::btc(const btc& obj) : _data(obj._data), _dataMap(obj._dataMap){}
 
 btc& btc::operator=(const btc& obj)
 {
@@ -20,10 +14,7 @@ btc& btc::operator=(const btc& obj)
     return (*this);
 }
 
-btc::~btc()
-{
-    
-}
+btc::~btc(){}
 
 void    btc::readData()
 {
@@ -44,10 +35,7 @@ void    btc::readData()
         date = line.substr(0, pos);
         if (date == "date")
             continue ;
-        if (line.substr(pos + 1) == "0")
-            value = 0;
-        else
-            value = std::stof(line.substr(pos + 1));
+        value = std::stof(line.substr(pos + 1));
          _dataMap.insert({date, value});
     }
 
@@ -71,7 +59,7 @@ void    btc::printResults(std::string inputFile)
 
     while (std::getline(input, line))
     {
-        std::regex syntax(R"(^[^]+ \| [^]+$)");
+        std::regex syntax(R"(^.+ \| .+$)");
         if (!std::regex_match(line, syntax))
         {
             std::cout << "Error: Wrong line format" << std::endl;
@@ -125,10 +113,17 @@ bool btc::isValidDate(std::string date)
     timeStruct.tm_mon = month - 1;    // Zero-based month (0 = Jan, 11 = Dec)
     timeStruct.tm_mday = day;
 
-    // comparing tm_mday ensures invalid days are caught
-    if (std::mktime(&timeStruct) == -1 || timeStruct.tm_mday != day)
+    // comparing tm_mday ensures invalid days are caught // std::mktime(&timeStruct) converts the std::tm into a timestamp (seconds since 1970)
+    if (std::mktime(&timeStruct) == -1 || timeStruct.tm_mday != day) // if the date was invalid, mktime would have changed it
     {
         std::cout << "Error: Invalid day in date => " << date << std::endl;
+        return false;
+    }
+
+    auto it = _dataMap.lower_bound(date);
+    if (it == _dataMap.begin() && date < it->first)
+    {
+        std::cout << "Error: Date before database records => " << date << std::endl;
         return false;
     }
 
@@ -140,7 +135,5 @@ float btc::getResult(std::string date, float value)
     auto it = _dataMap.lower_bound(date);
     if (it != _dataMap.begin() && (it == _dataMap.end() || it->first != date))
         --it;
-    if (it == _dataMap.end())
-        return (0);
     return (value * it->second);
 }
