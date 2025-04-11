@@ -13,4 +13,5 @@ class RPN
         RPN& operator=(const RPN& obj);
         ~RPN();
         void    parseInput();
+        void    printStack(std::stack<int> s);
 };
